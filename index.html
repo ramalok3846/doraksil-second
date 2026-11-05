@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#b9a4f0">
+<meta name="pq-build" content="3780933438ac">
+<meta name="pq-ver" content="Doraksil v.1.0.0">
+<meta name="pq-date" content="2026-11-05 14:28 KST">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="도락실">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>도락실 · 초 맞추기</title>
+<style>
+:root{
+  --bg:#f3eeff;--bg2:#e9e0ff;--card:#fff;--p:#b9a4f0;--p2:#8f73e0;--p3:#6b4fc4;--ink:#2a2050;--mute:#7b7399;
+  --line:#d9ccf7;--ok:#2e9e6b;--bad:#d1456b;--warn:#e0a526;
+  --sh:0 4px 0 var(--p2);--r:18px;
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;
+  background:
+   radial-gradient(circle at 15% 10%,#fff8 0,#fff0 40%),
+   repeating-linear-gradient(0deg,#0000 0 23px,#b9a4f01f 23px 24px),
+   repeating-linear-gradient(90deg,#0000 0 23px,#b9a4f01f 23px 24px),var(--bg);
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--p3)}
+.top{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--p);border-bottom:4px solid var(--p2);position:sticky;top:0;z-index:20}
+.top b{font-size:18px;letter-spacing:.5px}
+.top .sp{flex:1}
+.pill{font-size:12px;font-weight:800;padding:4px 9px;border-radius:99px;background:#fff;border:2px solid var(--p2);white-space:nowrap}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:5px;vertical-align:1px}
+.dot.off{background:var(--bad)}.dot.syn{background:var(--warn)}
+main{flex:1;width:100%;max-width:980px;margin:0 auto;padding:16px 14px 28px}
+.card{background:var(--card);border:3px solid var(--p2);border-radius:var(--r);box-shadow:var(--sh);padding:16px;margin:0 0 16px}
+.card h2,.card h3{margin:0 0 10px}
+.btn{appearance:none;border:3px solid var(--p3);background:var(--p2);color:#fff;font-weight:900;padding:12px 18px;border-radius:14px;box-shadow:0 4px 0 var(--p3);cursor:pointer;font-size:16px;touch-action:manipulation}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--p3)}
+.btn.ghost{background:#fff;color:var(--p3)}
+.btn.sm{padding:7px 12px;font-size:14px;border-radius:11px;box-shadow:0 3px 0 var(--p3)}
+.btn.red{background:var(--bad);border-color:#9d2a4b;box-shadow:0 4px 0 #9d2a4b}
+.btn.big{font-size:26px;padding:22px 30px;width:100%;border-radius:20px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+label.f{display:block;font-weight:800;font-size:14px;margin:0 0 12px}
+label.f small{font-weight:600;color:var(--mute)}
+.in{width:100%;margin-top:5px;padding:11px 12px;border:3px solid var(--line);border-radius:12px;background:#fff;font-size:16px}
+.in:focus{outline:none;border-color:var(--p2)}
+textarea.in{min-height:80px;resize:vertical}
+.muted{color:var(--mute);font-size:13px}
+.hero{text-align:center;padding:26px 14px}
+.marquee{display:inline-block;font-weight:900;font-size:clamp(34px,10vw,64px);letter-spacing:2px;color:var(--p3);text-shadow:3px 3px 0 #fff,6px 6px 0 var(--p)}
+.blink{animation:bl 1.1s steps(2,start) infinite}
+@keyframes bl{to{visibility:hidden}}
+.tag{display:inline-block;background:var(--bg2);border:2px solid var(--p);border-radius:10px;padding:3px 10px;font-weight:800;font-size:13px;margin:3px}
+.books{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.bk{width:150px;text-align:center}
+.bk .cv{width:150px;height:205px;border:3px solid var(--p2);border-radius:10px;background:var(--bg2) center/cover no-repeat;display:grid;place-items:center;font-size:40px;box-shadow:var(--sh)}
+.bk b{display:block;margin-top:8px;font-size:14px}
+.cab{border:5px solid var(--p3);border-radius:24px;background:linear-gradient(#fff,#f6f1ff);padding:14px;text-align:center;box-shadow:0 6px 0 var(--p2)}
+.screen{background:#2a2050;color:#e9e0ff;border:4px solid var(--p3);border-radius:14px;padding:14px 8px;margin:12px 0}
+.digits{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-weight:900;font-size:clamp(40px,14vw,92px);letter-spacing:1px;font-variant-numeric:tabular-nums;color:#d8c8ff}
+.digits.run{color:#fff}
+.target{font-size:clamp(28px,9vw,54px);font-weight:900;color:var(--p3)}
+.step{display:flex;gap:6px;justify-content:center;margin-bottom:10px}
+.step i{width:34px;height:10px;border-radius:5px;background:var(--line);border:2px solid var(--p2)}
+.step i.on{background:var(--p2)}.step i.done{background:var(--ok);border-color:var(--ok)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 6px;border-bottom:2px solid var(--line);text-align:left;vertical-align:middle}
+th{background:var(--bg2);position:sticky;top:0}
+.tw{overflow:auto;max-height:60vh;border:2px solid var(--line);border-radius:12px}
+.rk1{background:#fff3c4}.rk2{background:#eef0f6}.rk3{background:#f6e3d3}
+.medal{font-weight:900}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{border:3px solid var(--p2);background:#fff;color:var(--p3);font-weight:900;border-radius:12px;padding:8px 12px;cursor:pointer}
+.tabs button.on{background:var(--p2);color:#fff}
+.savebar{position:sticky;bottom:0;z-index:15;background:#fffe;backdrop-filter:blur(6px);border:3px solid var(--p2);border-radius:14px;padding:10px;margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 16px;border-radius:14px;z-index:99;max-width:92vw;font-weight:700;display:flex;gap:10px;align-items:center;box-shadow:0 6px 20px #0005}
+.modal{position:fixed;inset:0;background:#2a205088;z-index:90;display:grid;place-items:center;padding:14px}
+.modal .card{max-width:520px;width:100%;max-height:90vh;overflow:auto;margin:0}
+canvas.sig{width:100%;height:150px;border:3px dashed var(--p2);border-radius:12px;background:#fff;touch-action:none;display:block}
+.bedit{display:grid;grid-template-columns:110px 1fr;gap:12px}
+@media(max-width:560px){.bedit{grid-template-columns:1fr}}
+.cvedit{width:110px;height:150px;border:3px solid var(--p2);border-radius:10px;background:var(--bg2) center/cover no-repeat;display:grid;place-items:center;cursor:pointer;font-size:12px;font-weight:800;text-align:center;color:var(--p3)}
+.big-num{font-size:clamp(40px,12vw,76px);font-weight:900;color:var(--p3)}
+.win{color:var(--ok)}.lose{color:var(--bad)}
+.foot{text-align:center;padding:10px 14px 18px;color:var(--mute);font-size:12px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.seg label{border:3px solid var(--line);border-radius:10px;padding:6px 10px;font-weight:800;cursor:pointer;font-size:13px}
+.seg input{display:none}.seg input:checked+span{color:#fff}
+.seg label:has(input:checked){background:var(--p2);border-color:var(--p3);color:#fff}
+code.k{background:var(--bg2);padding:2px 6px;border-radius:6px;font-size:13px;word-break:break-all}
+.hide{display:none!important}
+@media print{.top,.foot,.savebar,.tabs{display:none}}
+</style>
+</head>
+<body>
+<div class="top" id="top"></div>
+<main id="app"><div class="card hero"><div class="marquee">도락실</div><p class="muted">불러오는 중…</p></div></main>
+<div class="foot" id="foot"></div>
+<div id="layer"></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   도락실 · 초 맞추기  (도서부 오락실)
+   폴란드 퀴즈와 같은 원리: 폴더 하나 + 상대경로 + 단일 앱 + 주소 파라미터(?admin 등)
+   · 로컬 우선: 모든 기록은 먼저 이 기기에 저장 → 인터넷이 되면 클라우드(Firebase REST)로 전송(대기열)
+   · 오프라인: 서비스 워커가 앱 전체를 저장, 주소 입력/새로고침/앱 아이콘 모두 동작
+   · 관리자: Firebase 이메일 로그인(REST) + 데이터베이스 admins/{uid}=true 인 계정만
+   ===================================================================== */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem('dr_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('dr_'+k,JSON.stringify(v));return true}catch(e){return false}},
+  del(k){try{localStorage.removeItem('dr_'+k)}catch(e){}}
+};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const BUILD=(document.querySelector('meta[name="pq-build"]')||{}).content||'';
+const VER=(document.querySelector('meta[name="pq-ver"]')||{}).content||'';
+const BDATE=(document.querySelector('meta[name="pq-date"]')||{}).content||'';
+
+/* ---------- 기본 설정 ---------- */
+const DEF={
+  ev:{title:'도락실',sub:'도서부 오락실 · 초 맞추기',date:'2026년 11월 11일 (수)',place:'충무공초등학교 꿈마루 도서관',
+      welcome:'도서부 오락실 "도락실"에 오신 것을 환영해요!\n책 청구기호를 보고, 스톱워치를 목표 시간에 가장 가깝게 멈춰 보세요.\n예) 청구기호 201 → 2.01초'},
+  books:[
+    {id:'b1',title:'도서부 추천도서 1',author:'',call:'201',cover:''},
+    {id:'b2',title:'도서부 추천도서 2',author:'',call:'305',cover:''}
+  ],
+  fields:{name:'req',grade:'req',klass:'req',num:'opt',sign:'opt'},
+  opts:{hideAfter:0,boardName:'masked',showBoardOnResult:true,autoReset:0},
+  ts:0
+};
+const FB={url:'https://pal-inte-db-default-rtdb.asia-southeast1.firebasedatabase.app',apiKey:'AIzaSyCEmf0KIiaF11nmS2CfBNA5yxZA9nrtmUU',root:'dr'};
+let CFG=loadCfg();
+function loadCfg(){
+  const s=store.get('cfg',null);const c=JSON.parse(JSON.stringify(DEF));
+  if(s){for(const k of ['ev','fields','opts'])Object.assign(c[k],s[k]||{});if(Array.isArray(s.books)&&s.books.length)c.books=s.books;c.ts=s.ts||0}
+  return c;
+}
+function saveCfgLocal(c){CFG=c;store.set('cfg',c)}
+
+/* ---------- 계산 ---------- */
+/* 청구기호의 첫 숫자 덩어리 ÷ 100 = 목표(초).  201 → 2.01초,  813 → 8.13초 */
+const targetMs=b=>{const m=/\d+/.exec(String((b&&b.call)||''));return m?parseInt(m[0],10)*10:0};
+const pad=(n,l)=>String(n).padStart(l,'0');
+const fmt=ms=>{ms=Math.max(0,Math.round(ms));return pad(Math.floor(ms/60000),2)+':'+pad(Math.floor(ms/1000)%60,2)+'.'+pad(ms%1000,3)};
+const sec=ms=>(ms/1000).toFixed(3)+'초';
+const noStr=n=>'D-'+pad(n,3);
+const maskName=n=>{n=String(n||'').trim();if(n.length<=1)return n;if(n.length===2)return n[0]+'*';return n[0]+'*'.repeat(n.length-2)+n[n.length-1]};
+
+/* ---------- 네트워크 / 클라우드(REST) ---------- */
+const net={online:navigator.onLine,state:'idle'};
+async function fetchT(url,opt,ms){
+  const c=new AbortController();const t=setTimeout(()=>c.abort(),ms||8000);
+  try{return await fetch(url,Object.assign({},opt,{signal:c.signal}))}finally{clearTimeout(t)}
+}
+const Auth={
+  id:null,
+  load(){let v=null;try{v=sessionStorage.getItem('dr_adm')||localStorage.getItem('dr_adm')}catch(e){}try{Auth.id=v?JSON.parse(v):null}catch(e){Auth.id=null}},
+  keep(){try{return localStorage.getItem('dr_keep')==='1'}catch(e){return false}},
+  save(){const t=JSON.stringify(Auth.id),k=Auth.keep();try{sessionStorage.removeItem('dr_adm');localStorage.removeItem('dr_adm')}catch(e){}try{(k?localStorage:sessionStorage).setItem('dr_adm',t)}catch(e){}},
+  clear(){Auth.id=null;try{sessionStorage.removeItem('dr_adm');localStorage.removeItem('dr_adm')}catch(e){}},
+  async post(url,body,form){
+    let r;
+    try{r=await fetchT(url,{method:'POST',headers:{'Content-Type':form?'application/x-www-form-urlencoded':'application/json'},body:form?new URLSearchParams(body).toString():JSON.stringify(body)},9000)}
+    catch(e){const x=new Error('network');x.kind='net';throw x}
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){const x=new Error((j.error&&j.error.message)||('HTTP '+r.status));x.kind=r.status>=500?'net':'auth';throw x}
+    return j;
+  },
+  async signIn(email,pw){
+    const j=await Auth.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+encodeURIComponent(FB.apiKey),{email,password:pw,returnSecureToken:true});
+    Auth.id={idToken:j.idToken,refresh:j.refreshToken,exp:Date.now()+(+j.expiresIn||3600)*1000,uid:j.localId,email:j.email||email,admin:null};
+    Auth.save();return Auth.id;
+  },
+  async refresh(){
+    const a=Auth.id;
+    const j=await Auth.post('https://securetoken.googleapis.com/v1/token?key='+encodeURIComponent(FB.apiKey),{grant_type:'refresh_token',refresh_token:a.refresh},true);
+    Auth.id=Object.assign({},a,{idToken:j.id_token,refresh:j.refresh_token,exp:Date.now()+(+j.expires_in||3600)*1000,uid:j.user_id});
+    Auth.save();return Auth.id;
+  },
+  async token(){
+    const a=Auth.id;if(!a)return null;
+    if(a.exp-Date.now()>60000)return a.idToken;
+    try{return (await Auth.refresh()).idToken}catch(e){return null}
+  }
+};
+const Cloud={
+  async req(path,method,body,adm,ms){
+    let q='';
+    if(adm){const t=await Auth.token();if(!t){const x=new Error('noauth');x.kind='auth';throw x}q='?auth='+encodeURIComponent(t)}
+    let r;
+    try{r=await fetchT(FB.url+'/'+(path[0]==='/'?path.slice(1):FB.root+'/'+path)+'.json'+q,{method,headers:body!==undefined?{'Content-Type':'application/json'}:undefined,body:body!==undefined?JSON.stringify(body):undefined},ms||8000)}
+    catch(e){const x=new Error('network');x.kind='net';throw x}
+    if(r.status===401||r.status===403){const x=new Error('denied');x.kind='auth';throw x}
+    if(!r.ok){const x=new Error('HTTP '+r.status);x.kind=r.status>=500?'net':'bad';throw x}
+    return r.json().catch(()=>null);
+  },
+  get:(p,adm,ms)=>Cloud.req(p,'GET',undefined,adm,ms),
+  put:(p,b,adm)=>Cloud.req(p,'PUT',b,adm),
+  del:(p,adm)=>Cloud.req(p,'DELETE',undefined,adm)
+};
+/* 오프라인 대기열: 같은 요청을 여러 번 보내도 안전하도록 PUT/DELETE 만 사용 */
+const Q={
+  list(){return store.get('q',[])},
+  push(job){job.id=uid();const l=Q.list();l.push(job);store.set('q',l);Q.flush()},
+  busy:false,
+  async flush(){
+    if(Q.busy||!navigator.onLine)return;Q.busy=true;setNet('syn');
+    const done=new Set();
+    try{
+      for(const j of Q.list()){
+        try{if(j.m==='DELETE')await Cloud.del(j.p,!!j.adm);else await Cloud.put(j.p,j.b,!!j.adm);done.add(j.id)}
+        catch(e){if(e.kind==='bad'){done.add(j.id);continue}if(e.kind==='net')break}
+      }
+    }catch(e){}
+    store.set('q',Q.list().filter(j=>!done.has(j.id)));
+    Q.busy=false;setNet(Q.list().length?'wait':'ok');
+  }
+};
+function setNet(s){net.state=s;renderTop()}
+
+/* ---------- 기록 ---------- */
+const Recs={
+  local(){return store.get('recs',[])},
+  addLocal(r){const l=Recs.local();l.push(r);store.set('recs',l)},
+  delLocal(id){store.set('recs',Recs.local().filter(r=>r.id!==id))},
+  /* 참여 번호: 클라우드 카운터(오르기만 가능) → 실패 시 이 기기 번호 */
+  async nextNo(){
+    let base=store.get('cnt',0);
+    for(let k=0;k<3;k++){
+      try{
+        const c=await Cloud.get('cnt',false,2500);const cur=Math.max(base,+c||0);
+        await Cloud.put('cnt',cur+1,false);store.set('cnt',cur+1);return {n:cur+1,off:0};
+      }catch(e){if(e.kind==='net')break}
+    }
+    const n=base+1;store.set('cnt',n);return {n,off:1};
+  },
+  async submit(p,res){
+    const total=res.reduce((a,x)=>a+x.diff,0);
+    const rec={id:uid(),ts:Date.now(),p,res,total,first:res[0]?res[0].diff:0,dev:devId()};
+    const {n,off}=await Recs.nextNo();rec.n=n;rec.off=off;
+    Recs.addLocal(rec);
+    const nm=CFG.opts.boardName==='none'?'':(CFG.opts.boardName==='full'?p.name:maskName(p.name));
+    const gk=[p.grade&&p.grade+'학년',p.klass&&p.klass+'반'].filter(Boolean).join(' ');
+    Q.push({m:'PUT',p:'records/'+rec.id,b:{json:JSON.stringify(rec),ts:rec.ts}});
+    Q.push({m:'PUT',p:'board/'+rec.id,b:{n:rec.n,nm:nm||'',g:gk,t:rec.total,f:rec.first,ts:rec.ts}});
+    return rec;
+  },
+  /* 관리자: 클라우드 + 이 기기 합치기 */
+  async all(){
+    const map=new Map();Recs.local().forEach(r=>map.set(r.id,r));let cloudOk=false;
+    try{
+      const o=await Cloud.get('records',true,10000)||{};cloudOk=true;
+      for(const [id,v] of Object.entries(o)){try{const r=JSON.parse(v.json);r.id=r.id||id;map.set(r.id,r)}catch(e){}}
+    }catch(e){}
+    const l=[...map.values()];l.sort((a,b)=>a.total-b.total||a.first-b.first||a.ts-b.ts);
+    return {list:l,cloudOk};
+  },
+  /* 공개 순위판: board(공개 읽기) + 이 기기 */
+  async board(){
+    const map=new Map();
+    Recs.local().forEach(r=>map.set(r.id,{id:r.id,n:r.n,nm:CFG.opts.boardName==='none'?'':(CFG.opts.boardName==='full'?r.p.name:maskName(r.p.name)),g:[r.p.grade&&r.p.grade+'학년',r.p.klass&&r.p.klass+'반'].filter(Boolean).join(' '),t:r.total,f:r.first,ts:r.ts}));
+    let ok=false;
+    try{const o=await Cloud.get('board',false,6000)||{};ok=true;for(const [id,v] of Object.entries(o))map.set(id,Object.assign({id},v));store.set('boardCache',Object.entries(o).map(([id,v])=>Object.assign({id},v)))}
+    catch(e){store.get('boardCache',[]).forEach(v=>{if(!map.has(v.id))map.set(v.id,v)})}
+    const l=[...map.values()];l.sort((a,b)=>a.t-b.t||(a.f||0)-(b.f||0)||a.ts-b.ts);return {list:l,ok};
+  }
+};
+const devId=()=>{let d=store.get('dev',null);if(!d){d=uid();store.set('dev',d)}return d};
+
+/* ---------- 화면 공통 ---------- */
+const P=new URLSearchParams(location.search);
+const base=location.pathname.replace(/[^\/]*$/,'');
+function go(q){history.pushState(null,'',base+(q?'?'+q:''));route()}
+function toast(msg,btn,fn,ms){
+  const old=$('#toast');if(old)old.remove();
+  const d=document.createElement('div');d.className='toast';d.id='toast';d.innerHTML='<span>'+esc(msg)+'</span>'+(btn?'<button class="btn sm">'+esc(btn)+'</button>':'');
+  if(btn)$('button',d).onclick=()=>{d.remove();fn&&fn()};
+  document.body.appendChild(d);setTimeout(()=>d.remove(),ms||(btn?12000:2800));
+}
+function modal(html,onmount){
+  const l=$('#layer');l.innerHTML='<div class="modal"><div class="card">'+html+'</div></div>';
+  const close=()=>{l.innerHTML=''};
+  $('.modal',l).addEventListener('pointerdown',e=>{if(e.target.classList.contains('modal'))close()});
+  onmount&&onmount(l,close);return close;
+}
+function confirmBox(msg,okText,fn){
+  modal('<h3>확인</h3><p style="white-space:pre-wrap">'+esc(msg)+'</p><div class="row"><button class="btn red" id="y">'+esc(okText||'확인')+'</button><button class="btn ghost" id="n">취소</button></div>',(l,close)=>{$('#y',l).onclick=()=>{close();fn()};$('#n',l).onclick=close});
+}
+function renderTop(){
+  const t=$('#top');if(!t)return;
+  const st=!navigator.onLine?['off','오프라인']:net.state==='syn'?['syn','전송 중']:Q.list().length?['syn','전송 대기 '+Q.list().length]:['','온라인'];
+  t.innerHTML='<b>🕹 도락실</b><span class="sp"></span><span class="pill"><span class="dot '+st[0]+'"></span>'+st[1]+'</span>'+
+    (Inst.can?'<button class="btn sm ghost" id="inst">앱 설치</button>':'');
+  const b=$('#inst');if(b)b.onclick=Inst.run;
+  const f=$('#foot');if(f)f.innerHTML=esc(VER)+' · 빌드 '+esc(BUILD.slice(0,8))+' · <a href="?admin" data-go="admin">관리자</a> · <a href="?board" data-go="board">순위판</a> · <a href="?guide" data-go="guide">안내</a>';
+}
+document.addEventListener('click',e=>{const a=e.target.closest('a[data-go]');if(a){e.preventDefault();go(a.dataset.go)}});
+window.addEventListener('popstate',route);
+window.addEventListener('online',()=>{renderTop();Q.flush()});
+window.addEventListener('offline',renderTop);
+
+/* ---------- 앱 설치 ---------- */
+const Inst={can:false,ev:null,
+  run(){
+    if(Inst.ev){Inst.ev.prompt();Inst.ev.userChoice.finally(()=>{Inst.ev=null;Inst.can=false;renderTop()})}
+    else modal('<h3>앱 설치</h3><p>iPhone/iPad: Safari 하단 <b>공유</b> → <b>홈 화면에 추가</b><br>Android/PC: 브라우저 메뉴 → <b>앱 설치</b> 또는 <b>홈 화면에 추가</b></p><button class="btn" id="c">닫기</button>',(l,c)=>{$('#c',l).onclick=c});
+  }};
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();Inst.ev=e;Inst.can=true;renderTop()});
+window.addEventListener('appinstalled',()=>{Inst.can=false;renderTop()});
+
+/* =====================================================================
+   일반 화면
+   ===================================================================== */
+const S={p:{},i:0,res:[],t0:0,raf:0,running:false,rec:null,rank:null};
+function resetPlay(){cancelAnimationFrame(S.raf);S.p={};S.i=0;S.res=[];S.running=false;S.rec=null;S.rank=null;clearTimeout(S.auto)}
+const app=()=>$('#app');
+const steps=()=>'<div class="step">'+CFG.books.map((b,k)=>'<i class="'+(k<S.res.length?'done':k===S.i?'on':'')+'"></i>').join('')+'</div>';
+const cover=b=>b.cover?'<div class="cv" style="background-image:url('+esc(b.cover)+')"></div>':'<div class="cv">📖</div>';
+
+function viewWelcome(){
+  resetPlay();const e=CFG.ev;
+  app().innerHTML='<div class="card hero">'+
+    '<div class="marquee">'+esc(e.title)+'</div><div style="font-weight:900;color:var(--p3);margin-top:4px">'+esc(e.sub)+'</div>'+
+    '<div style="margin-top:12px"><span class="tag">📅 '+esc(e.date)+'</span><span class="tag">📍 '+esc(e.place)+'</span></div>'+
+    '<p style="white-space:pre-wrap;line-height:1.7;margin:16px 0">'+esc(e.welcome)+'</p>'+
+    '<div class="books">'+CFG.books.map(b=>'<div class="bk">'+cover(b)+'<b>'+esc(b.title)+'</b><span class="tag">목표 '+(targetMs(b)/1000).toFixed(2)+'초</span></div>').join('')+'</div>'+
+    '<button class="btn big blink-btn" id="go">▶ 게임 시작</button>'+
+    '<p class="muted"><span class="blink">INSERT COIN</span> · 화면을 눌러 시작하세요</p></div>'+
+    (CFG.opts.showBoardOnResult?'<div class="card"><h3>🏆 현재 순위 TOP 5</h3><div id="mini" class="muted">불러오는 중…</div></div>':'');
+  $('#go').onclick=()=>viewInfo();
+  if(CFG.opts.showBoardOnResult)Recs.board().then(b=>{const m=$('#mini');if(m)m.innerHTML=boardHtml(b.list.slice(0,5),null)});
+}
+const FIELD_LABEL={name:'이름',grade:'학년',klass:'반',num:'번호',sign:'서명'};
+function viewInfo(){
+  const F=CFG.fields;
+  const need=k=>F[k]==='req';const on=k=>F[k]!=='off';
+  const sel=(k,n,u)=>'<select class="in" id="f_'+k+'"><option value="">선택</option>'+Array.from({length:n},(_,i)=>'<option value="'+(i+1)+'"'+(S.p[k]==i+1?' selected':'')+'>'+(i+1)+u+'</option>').join('')+'</select>';
+  const lab=(k,inner)=>on(k)?'<label class="f">'+FIELD_LABEL[k]+' <small>'+(need(k)?'(필수)':'(선택)')+'</small>'+inner+'</label>':'';
+  app().innerHTML='<div class="card"><h2>참가자 정보</h2>'+
+    lab('name','<input class="in" id="f_name" maxlength="20" autocomplete="off" value="'+esc(S.p.name||'')+'">')+
+    '<div class="grid2">'+lab('grade',sel('grade',6,'학년'))+lab('klass',sel('klass',15,'반'))+'</div>'+
+    lab('num',sel('num',40,'번'))+
+    (on('sign')?'<label class="f">서명 <small>'+(need('sign')?'(필수)':'(선택)')+'</small><canvas class="sig" id="sig"></canvas><button type="button" class="btn sm ghost" id="sigc" style="margin-top:6px">지우기</button></label>':'')+
+    '<div class="row"><button class="btn" id="next">다음 ▶</button><button class="btn ghost" id="back">처음으로</button></div></div>';
+  const sg=on('sign')?Sig($('#sig')):null;
+  $('#back').onclick=()=>go('');
+  if(sg)$('#sigc').onclick=sg.clear;
+  $('#next').onclick=()=>{
+    const p={};const miss=[];
+    for(const k of ['name','grade','klass','num']){
+      if(!on(k))continue;const v=($('#f_'+k).value||'').trim();
+      if(!v&&need(k))miss.push(FIELD_LABEL[k]);p[k]=v;
+    }
+    if(sg){const d=sg.data();if(!d&&need('sign'))miss.push('서명');p.sign=d}
+    if(miss.length){toast(miss.join(', ')+' 입력이 필요해요');return}
+    S.p=p;S.i=0;S.res=[];viewPlay();
+  };
+}
+function Sig(cv){
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  const w=cv.clientWidth||300,h=150;cv.width=w*dpr;cv.height=h*dpr;
+  const c=cv.getContext('2d');c.scale(dpr,dpr);c.lineWidth=3;c.lineCap='round';c.lineJoin='round';c.strokeStyle='#2a2050';
+  let down=false,dirty=false;
+  const pt=e=>{const r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+  cv.onpointerdown=e=>{down=true;cv.setPointerCapture(e.pointerId);const [x,y]=pt(e);c.beginPath();c.moveTo(x,y);c.lineTo(x+.1,y+.1);c.stroke();dirty=true};
+  cv.onpointermove=e=>{if(!down)return;const [x,y]=pt(e);c.lineTo(x,y);c.stroke()};
+  cv.onpointerup=cv.onpointercancel=()=>{down=false};
+  return {clear(){c.clearRect(0,0,w,h);dirty=false},
+    data(){if(!dirty)return '';const t=document.createElement('canvas');t.width=300;t.height=100;const x=t.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,300,100);x.drawImage(cv,0,0,300,100);return t.toDataURL('image/jpeg',.6)}};
+}
+function viewPlay(){
+  const b=CFG.books[S.i];const tg=targetMs(b);S.running=false;
+  app().innerHTML='<div class="cab">'+steps()+
+    '<div class="muted">'+(S.i+1)+' / '+CFG.books.length+'번째 책</div>'+
+    '<div class="row" style="justify-content:center;align-items:flex-start;gap:16px;margin:10px 0"><div class="bk" style="width:120px"><div class="cv" style="width:120px;height:164px;'+(b.cover?'background-image:url('+esc(b.cover)+')':'')+'">'+(b.cover?'':'📖')+'</div></div>'+
+    '<div style="text-align:left;flex:1;min-width:150px"><b style="font-size:18px">'+esc(b.title)+'</b><div class="muted">'+esc(b.author)+'</div><div class="tag">청구기호 '+esc(b.call)+'</div></div></div>'+
+    '<div class="muted">목표 시간</div><div class="target">'+(tg/1000).toFixed(2)+'초</div>'+
+    '<div class="screen"><div class="digits" id="dg">00:00.000</div></div>'+
+    '<button class="btn big" id="main">▶ START</button><div class="muted" style="margin-top:8px" id="hint">START를 누르면 시작, STOP(또는 스페이스바)으로 멈춰요</div></div>';
+  const dg=$('#dg'),btn=$('#main');
+  const hideAfter=(+CFG.opts.hideAfter||0)*1000;
+  const tick=()=>{
+    const el=performance.now()-S.t0;
+    dg.textContent=(hideAfter&&el>hideAfter)?'??:??.???':fmt(el);
+    S.raf=requestAnimationFrame(tick);
+  };
+  const start=()=>{S.running=true;S.t0=performance.now();dg.classList.add('run');btn.textContent='■ STOP';btn.classList.add('red');$('#hint').textContent=hideAfter?hideAfter/1000+'초 뒤 숫자가 가려져요. 감으로 멈춰요!':'목표 시간에 맞춰 STOP!';tick()};
+  const stop=()=>{
+    const el=Math.round(performance.now()-S.t0);cancelAnimationFrame(S.raf);S.running=false;
+    dg.textContent=fmt(el);dg.classList.remove('run');
+    S.res.push({bid:b.id,title:b.title,call:b.call,target:tg,ms:el,diff:Math.abs(el-tg)});
+    S.keyOff&&S.keyOff();viewBook();
+  };
+  btn.onpointerdown=e=>{e.preventDefault();S.running?stop():start()};
+  const key=e=>{if(e.code==='Space'||e.code==='Enter'){e.preventDefault();if(e.repeat)return;S.running?stop():start()}};
+  document.addEventListener('keydown',key);S.keyOff=()=>{document.removeEventListener('keydown',key);S.keyOff=null};
+}
+function viewBook(){
+  const r=S.res[S.res.length-1];const last=S.res.length>=CFG.books.length;
+  const d=r.diff;const msg=d<=10?'🎯 완벽해요!':d<=50?'👏 대단해요!':d<=150?'👍 잘했어요!':d<=400?'😊 아쉬워요':'💪 다시 도전!';
+  app().innerHTML='<div class="cab">'+steps()+'<h2 style="margin:6px 0">'+esc(r.title)+'</h2>'+
+    '<div class="muted">목표</div><div class="target">'+sec(r.target)+'</div>'+
+    '<div class="screen"><div class="digits">'+fmt(r.ms)+'</div></div>'+
+    '<div class="muted">차이</div><div class="big-num">'+(r.ms>=r.target?'+':'−')+sec(d)+'</div><p style="font-weight:900;font-size:20px">'+msg+'</p>'+
+    '<button class="btn big" id="nx">'+(last?'결과 보기 ▶':'다음 책 ▶')+'</button></div>';
+  $('#nx').onclick=async()=>{
+    if(!last){S.i++;viewPlay();return}
+    $('#nx').disabled=true;$('#nx').textContent='저장 중…';
+    S.rec=await Recs.submit(S.p,S.res);viewResult();
+  };
+}
+async function viewResult(){
+  const r=S.rec;
+  app().innerHTML='<div class="cab"><div class="muted">참여 번호</div><div class="big-num">'+noStr(r.n)+'</div>'+
+    (r.off?'<div class="muted">오프라인에서 받은 번호예요. 온라인이 되면 자동 전송돼요.</div>':'')+
+    '<div class="screen"><table style="color:#e9e0ff">'+r.res.map(x=>'<tr><td>'+esc(x.title)+'</td><td>목표 '+sec(x.target)+'</td><td>내 기록 '+fmt(x.ms)+'</td><td>차이 <b>'+sec(x.diff)+'</b></td></tr>').join('')+'</table></div>'+
+    '<div class="muted">총 차이 (작을수록 승리)</div><div class="big-num">'+sec(r.total)+'</div><div id="rk" class="muted">순위 계산 중…</div>'+
+    '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn" id="again">처음으로</button>'+(CFG.opts.showBoardOnResult?'<button class="btn ghost" id="bd">🏆 순위판</button>':'')+'</div></div>'+
+    (CFG.opts.showBoardOnResult?'<div class="card" id="bdcard"></div>':'');
+  $('#again').onclick=()=>go('');
+  const bd=$('#bd');if(bd)bd.onclick=()=>go('board');
+  const b=await Recs.board();const idx=b.list.findIndex(x=>x.id===r.id);
+  const rk=$('#rk');if(rk)rk.innerHTML=idx>=0?'<span style="font-size:22px;font-weight:900;color:var(--p3)">현재 '+(idx+1)+'위</span> / '+b.list.length+'명'+(b.ok?'':' (오프라인 기준)'):'';
+  const c=$('#bdcard');if(c)c.innerHTML='<h3>🏆 순위 TOP 10</h3>'+boardHtml(b.list.slice(0,10),r.id);
+  if(+CFG.opts.autoReset>0){S.auto=setTimeout(()=>{if($('#again'))go('')},CFG.opts.autoReset*1000)}
+}
+function boardHtml(l,me){
+  if(!l.length)return '<span class="muted">아직 기록이 없어요. 첫 도전자가 되어 보세요!</span>';
+  return '<div class="tw"><table><tr><th>순위</th><th>번호</th><th>참가자</th><th>총 차이</th></tr>'+l.map((x,i)=>'<tr class="'+(i<3?'rk'+(i+1):'')+'" '+(x.id===me?'style="outline:3px solid var(--p2)"':'')+'><td class="medal">'+(['🥇','🥈','🥉'][i]||(i+1))+'</td><td>'+noStr(x.n)+'</td><td>'+esc([x.g,x.nm].filter(Boolean).join(' ')||'-')+'</td><td><b>'+sec(x.t)+'</b></td></tr>').join('')+'</table></div>';
+}
+async function viewBoard(){
+  app().innerHTML='<div class="card"><h2>🏆 도락실 순위판</h2><div id="bl" class="muted">불러오는 중…</div><div class="row" style="margin-top:12px"><button class="btn ghost" id="h">처음으로</button></div></div>';
+  $('#h').onclick=()=>go('');
+  const draw=async()=>{const b=await Recs.board();const e=$('#bl');if(!e)return;e.innerHTML=boardHtml(b.list.slice(0,50),null)+'<p class="muted">'+(b.ok?'실시간':'오프라인(마지막으로 받은 순위)')+' · 15초마다 갱신</p>'};
+  await draw();clearInterval(S.bt);S.bt=setInterval(()=>{if(!$('#bl'))clearInterval(S.bt);else draw()},15000);
+}
+function viewGuide(){
+  app().innerHTML='<div class="card"><h2>이용 안내</h2><ol style="line-height:1.9"><li>게임 시작 → 이름·학년·반 등을 입력해요.</li><li>책 표지와 <b>청구기호</b>를 봐요. 청구기호 201 → 목표 <b>2.01초</b>.</li><li>START로 스톱워치를 켜고, 목표에 가장 가깝게 STOP!</li><li>책마다 오차를 합쳐 <b>총 차이가 작을수록</b> 순위가 높아요.</li><li>끝나면 <b>참여 번호</b>와 결과가 나와요.</li></ol>'+
+    '<h3>주소로 바로 열기</h3>'+PARAMS_HTML()+'<button class="btn" id="h">처음으로</button></div>';
+  $('#h').onclick=()=>go('');
+}
+function PARAMS_HTML(){
+  const rows=[['./','처음 화면'],['?admin','관리자 (/admin/)'],['?admin=books','관리자 · 책 등록 (/books/)'],['?admin=rec','관리자 · 참여·결과 (/records/)'],['?admin=set','관리자 · 설정 (/settings/)'],['?admin=cloud','관리자 · 클라우드 (/cloud/)'],['?board','순위판 (/board/)'],['?guide','이용 안내 (/guide/)'],['?update=settings','설정만 업데이트 (/update-settings/)'],['?update=app','앱 업데이트 (/update-app/)'],['?update=app&hard=1','앱 강력 업데이트(캐시 삭제)'],['?repair','저장소 진단·복구 (/repair/)'],['?reset','초기화 선택 (/reset/)']];
+  return '<div class="tw"><table>'+rows.map(r=>'<tr><td><code class="k">'+esc(r[0])+'</code></td><td>'+esc(r[1])+'</td></tr>').join('')+'</table></div>';
+}
+
+/* =====================================================================
+   관리자
+   ===================================================================== */
+let AT='rec',DRAFT=null;
+const ATABS=[['rec','🏆 참여·결과'],['books','📚 책 등록'],['fields','📝 참여 입력'],['set','⚙ 화면·게임'],['cloud','☁ 로그인·클라우드'],['upd','🔄 업데이트'],['url','🔗 주소']];
+const TAB_ALIAS={rec:'rec',books:'books',qa:'books',fields:'fields',in:'fields',set:'set',cloud:'cloud',upd:'upd',url:'url'};
+function viewAdmin(){
+  const q=P.get('admin');if(q!==null&&q!==''&&TAB_ALIAS[q])AT=TAB_ALIAS[q];
+  if(!Auth.id){viewLogin();return}
+  if(!DRAFT)DRAFT=JSON.parse(JSON.stringify(CFG));
+  app().innerHTML='<div class="card"><div class="row"><h2 style="margin:0;flex:1">관리자</h2><span class="pill">'+esc(Auth.id.email||'')+'</span><button class="btn sm ghost" id="lo">로그아웃</button></div></div>'+
+    '<div class="tabs">'+ATABS.map(t=>'<button data-t="'+t[0]+'" class="'+(AT===t[0]?'on':'')+'">'+t[1]+'</button>').join('')+'</div><div id="pane"></div>';
+  $('#lo').onclick=()=>{Auth.clear();DRAFT=null;toast('로그아웃했어요');viewAdmin()};
+  $$('.tabs button').forEach(b=>b.onclick=()=>{collect();AT=b.dataset.t;history.replaceState(null,'',base+'?admin='+AT);viewAdmin()});
+  ({rec:paneRec,books:paneBooks,fields:paneFields,set:paneSet,cloud:paneCloud,upd:paneUpd,url:paneUrl}[AT])($('#pane'));
+}
+function viewLogin(){
+  app().innerHTML='<div class="card"><h2>🔐 관리자 로그인</h2><p class="muted">Firebase 계정으로 로그인해요. 데이터베이스 <code class="k">admins/{uid}=true</code> 로 등록된 계정만 설정을 바꿀 수 있어요.</p>'+
+    '<label class="f">이메일<input class="in" id="em" type="email" autocomplete="username"></label>'+
+    '<label class="f">비밀번호<input class="in" id="pw" type="password" autocomplete="current-password"></label>'+
+    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="kp"'+(Auth.keep()?' checked':'')+'> 이 기기에서 로그인 유지</label>'+
+    '<div class="row"><button class="btn" id="li">로그인</button><button class="btn ghost" id="h">처음으로</button></div><p id="msg" class="muted"></p></div>';
+  $('#h').onclick=()=>go('');
+  const doIt=async()=>{
+    const m=$('#msg');if(!navigator.onLine){m.textContent='로그인은 인터넷 연결이 필요해요.';return}
+    try{localStorage.setItem('dr_keep',$('#kp').checked?'1':'0')}catch(e){}
+    m.textContent='로그인 중…';
+    try{
+      await Auth.signIn($('#em').value.trim(),$('#pw').value);
+      const ok=await Cloud.req('/admins/'+Auth.id.uid,'GET',undefined,true).catch(()=>null);
+      if(ok!==true){Auth.clear();m.textContent='로그인은 됐지만 관리자로 등록된 계정이 아니에요. (admins 에 uid 등록 필요)';return}
+      Auth.id.admin=true;Auth.save();DRAFT=null;viewAdmin();
+    }catch(e){m.textContent=e.kind==='net'?'네트워크 오류예요.':'이메일 또는 비밀번호를 확인해 주세요.'}
+  };
+  $('#li').onclick=doIt;$('#pw').onkeydown=e=>{if(e.key==='Enter')doIt()};
+}
+/* 입력값 → DRAFT */
+function collect(){
+  if(!DRAFT||!$('#pane'))return;
+  if(AT==='books'){
+    $$('.bcard').forEach(el=>{const b=DRAFT.books.find(x=>x.id===el.dataset.id);if(!b)return;
+      b.title=$('.b_t',el).value.trim();b.author=$('.b_a',el).value.trim();b.call=$('.b_c',el).value.trim()})
+  }else if(AT==='fields'){
+    for(const k of Object.keys(DRAFT.fields)){const r=$('input[name="fd_'+k+'"]:checked');if(r)DRAFT.fields[k]=r.value}
+  }else if(AT==='set'){
+    const g=id=>{const e=$('#'+id);return e?e.value:undefined};
+    const E=DRAFT.ev;for(const k of ['title','sub','date','place','welcome'])if(g('ev_'+k)!==undefined)E[k]=g('ev_'+k);
+    DRAFT.opts.hideAfter=+g('o_hide')||0;DRAFT.opts.autoReset=+g('o_auto')||0;
+    DRAFT.opts.boardName=g('o_bn');DRAFT.opts.showBoardOnResult=$('#o_sb').checked;
+  }
+}
+function savebar(){
+  return '<div class="savebar"><button class="btn" id="sv">💾 저장</button><button class="btn ghost" id="rv">되돌리기</button><span class="muted" id="svm">바꾼 내용은 저장해야 반영돼요. 저장하면 이 기기와 클라우드에 올라가요.</span></div>';
+}
+function bindSave(){
+  $('#sv').onclick=async()=>{
+    collect();
+    if(!DRAFT.books.length){toast('책이 한 권 이상 필요해요');return}
+    if(DRAFT.books.some(b=>!b.title||!targetMs(b))){toast('책 제목과 청구기호(숫자)를 확인해 주세요');return}
+    DRAFT.ts=Date.now();saveCfgLocal(JSON.parse(JSON.stringify(DRAFT)));
+    const m=$('#svm');m.textContent='저장 중…';
+    try{await Cloud.put('cfg',CFG,true);m.textContent='저장 완료 · 클라우드에도 올렸어요.';toast('저장했어요')}
+    catch(e){Q.push({m:'PUT',p:'cfg',b:CFG,adm:true});m.textContent=e.kind==='auth'?'이 기기에는 저장됐지만 클라우드 권한이 없어요. 다시 로그인해 주세요.':'이 기기에 저장했어요. 온라인이 되면 클라우드에 올라가요.'}
+  };
+  $('#rv').onclick=()=>{DRAFT=JSON.parse(JSON.stringify(CFG));viewAdmin()};
+}
+
+/* --- 책 등록 --- */
+function paneBooks(p){
+  p.innerHTML='<div class="card"><h3>퀴즈에 낼 책 ('+DRAFT.books.length+'권)</h3><p class="muted">청구기호의 첫 숫자 ÷ 100 = 목표 초. 예) 201 → 2.01초. 기본은 두 권이에요.</p><div id="bl"></div><button class="btn" id="add"'+(DRAFT.books.length>=12?' disabled':'')+'>＋ 책 추가</button></div>'+savebar();
+  const draw=()=>{
+    $('#bl').innerHTML=DRAFT.books.map((b,i)=>'<div class="card bcard" data-id="'+esc(b.id)+'"><div class="bedit"><div><div class="cvedit" style="'+(b.cover?'background-image:url('+esc(b.cover)+')':'')+'" data-cv="'+esc(b.id)+'">'+(b.cover?'':'표지<br>선택')+'</div>'+(b.cover?'<button class="btn sm ghost" data-rmcv="'+esc(b.id)+'" style="margin-top:6px">표지 삭제</button>':'')+'</div><div>'+
+      '<label class="f">책 제목<input class="in b_t" maxlength="60" value="'+esc(b.title)+'"></label>'+
+      '<div class="grid2"><label class="f">지은이 <small>(선택)</small><input class="in b_a" maxlength="30" value="'+esc(b.author)+'"></label>'+
+      '<label class="f">청구기호 <small>(숫자 포함)</small><input class="in b_c" maxlength="30" value="'+esc(b.call)+'" inputmode="text"></label></div>'+
+      '<div class="tag">목표 <b>'+(targetMs(b)/1000).toFixed(2)+'초</b></div> <div class="row" style="margin-top:6px"><button class="btn sm ghost" data-up="'+i+'">▲</button><button class="btn sm ghost" data-dn="'+i+'">▼</button><button class="btn sm red" data-rm="'+i+'">삭제</button></div></div></div></div>').join('');
+    $$('[data-rm]').forEach(b=>b.onclick=()=>{collect();if(DRAFT.books.length<=1){toast('책은 한 권 이상 필요해요');return}confirmBox('이 책을 삭제할까요?','삭제',()=>{DRAFT.books.splice(+b.dataset.rm,1);viewAdmin()})});
+    $$('[data-up]').forEach(b=>b.onclick=()=>{collect();const i=+b.dataset.up;if(i>0){[DRAFT.books[i-1],DRAFT.books[i]]=[DRAFT.books[i],DRAFT.books[i-1]];viewAdmin()}});
+    $$('[data-dn]').forEach(b=>b.onclick=()=>{collect();const i=+b.dataset.dn;if(i<DRAFT.books.length-1){[DRAFT.books[i+1],DRAFT.books[i]]=[DRAFT.books[i],DRAFT.books[i+1]];viewAdmin()}});
+    $$('[data-rmcv]').forEach(b=>b.onclick=()=>{collect();DRAFT.books.find(x=>x.id===b.dataset.rmcv).cover='';viewAdmin()});
+    $$('[data-cv]').forEach(b=>b.onclick=()=>{
+      const f=document.createElement('input');f.type='file';f.accept='image/*';
+      f.onchange=async()=>{if(!f.files[0])return;collect();try{DRAFT.books.find(x=>x.id===b.dataset.cv).cover=await shrink(f.files[0],520);viewAdmin()}catch(e){toast('이미지를 읽을 수 없어요')}};
+      f.click();
+    });
+    $$('.b_c').forEach(i=>i.oninput=()=>{const t=i.closest('.bcard').querySelector('.tag b');t.textContent=(targetMs({call:i.value})/1000).toFixed(2)+'초'});
+  };
+  draw();
+  $('#add').onclick=()=>{collect();DRAFT.books.push({id:'b'+uid(),title:'새 책',author:'',call:'101',cover:''});viewAdmin()};
+  bindSave();
+}
+function shrink(file,max){
+  return new Promise((res,rej)=>{
+    const u=URL.createObjectURL(file),im=new Image();
+    im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.78))};
+    im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};im.src=u;
+  });
+}
+
+/* --- 참여 입력 --- */
+function paneFields(p){
+  const F=DRAFT.fields;
+  const seg=k=>'<div class="seg">'+[['req','필수'],['opt','선택'],['off','사용 안 함']].map(o=>'<label><input type="radio" name="fd_'+k+'" value="'+o[0]+'"'+(F[k]===o[0]?' checked':'')+'><span>'+o[1]+'</span></label>').join('')+'</div>';
+  p.innerHTML='<div class="card"><h3>참가자 입력 항목</h3><p class="muted">항목마다 필수·선택·사용 안 함을 정해요.</p>'+
+    Object.keys(FIELD_LABEL).map(k=>'<div style="margin-bottom:12px"><b>'+FIELD_LABEL[k]+'</b>'+seg(k)+'</div>').join('')+
+    '<div class="row"><button class="btn sm ghost" data-pre="a">이름·학년·반 필수</button><button class="btn sm ghost" data-pre="b">모두 선택</button><button class="btn sm ghost" data-pre="c">이름만</button></div></div>'+savebar();
+  $$('[data-pre]').forEach(b=>b.onclick=()=>{
+    const m={a:{name:'req',grade:'req',klass:'req',num:'opt',sign:'opt'},b:{name:'opt',grade:'opt',klass:'opt',num:'opt',sign:'opt'},c:{name:'req',grade:'off',klass:'off',num:'off',sign:'off'}}[b.dataset.pre];
+    Object.assign(DRAFT.fields,m);viewAdmin();
+  });
+  bindSave();
+}
+/* --- 화면·게임 --- */
+function paneSet(p){
+  const E=DRAFT.ev,O=DRAFT.opts;
+  p.innerHTML='<div class="card"><h3>행사 화면</h3>'+
+    ['title:제목','sub:부제목','date:날짜','place:장소'].map(s=>{const [k,l]=s.split(':');return '<label class="f">'+l+'<input class="in" id="ev_'+k+'" value="'+esc(E[k])+'"></label>'}).join('')+
+    '<label class="f">환영 문구<textarea class="in" id="ev_welcome">'+esc(E.welcome)+'</textarea></label></div>'+
+    '<div class="card"><h3>게임 옵션</h3>'+
+    '<label class="f">숫자 가리기 <small>(몇 초 뒤부터 스톱워치 숫자를 가려요 · 0 = 안 가림)</small><input class="in" id="o_hide" type="number" min="0" max="60" value="'+(+O.hideAfter||0)+'"></label>'+
+    '<label class="f">순위판 이름 표시<select class="in" id="o_bn"><option value="masked"'+(O.boardName==='masked'?' selected':'')+'>가린 이름 (홍*동)</option><option value="full"'+(O.boardName==='full'?' selected':'')+'>전체 이름</option><option value="none"'+(O.boardName==='none'?' selected':'')+'>번호만</option></select></label>'+
+    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="o_sb"'+(O.showBoardOnResult?' checked':'')+'> 처음 화면·결과 화면에 순위 보이기</label>'+
+    '<label class="f">결과 후 자동으로 처음 화면 <small>(초 · 0 = 끔)</small><input class="in" id="o_auto" type="number" min="0" max="120" value="'+(+O.autoReset||0)+'"></label></div>'+savebar();
+  bindSave();
+}
+/* --- 참여·결과 --- */
+async function paneRec(p){
+  p.innerHTML='<div class="card"><div class="row"><h3 style="margin:0;flex:1">참여·결과</h3><button class="btn sm ghost" id="rf">새로고침</button><button class="btn sm ghost" id="csv">CSV</button></div><div id="rl" class="muted" style="margin-top:10px">불러오는 중…</div></div>';
+  const draw=async()=>{
+    const {list,cloudOk}=await Recs.all();const rl=$('#rl');if(!rl)return;
+    window._recs=list;
+    const cols=CFG.books;
+    rl.innerHTML='<p class="muted">총 '+list.length+'명 · '+(cloudOk?'클라우드+이 기기':'이 기기 기록만(클라우드 연결 안 됨)')+'</p>'+(list.length?'<div class="tw"><table><tr><th>순위</th><th>번호</th><th>이름</th><th>학적</th>'+cols.map(b=>'<th>'+esc(b.title.slice(0,8))+'</th>').join('')+'<th>총 차이</th><th></th></tr>'+
+      list.map((r,i)=>'<tr class="'+(i<3?'rk'+(i+1):'')+'"><td class="medal">'+(['🥇','🥈','🥉'][i]||(i+1))+'</td><td>'+noStr(r.n)+(r.off?'*':'')+'</td><td>'+esc(r.p.name||'-')+'</td><td>'+esc([r.p.grade&&r.p.grade+'-',r.p.klass,r.p.num&&'('+r.p.num+')'].filter(Boolean).join('')||'-')+'</td>'+
+        cols.map(b=>{const x=(r.res||[]).find(z=>z.bid===b.id);return '<td>'+(x?fmt(x.ms)+'<br><span class="muted">'+sec(x.diff)+'</span>':'-')+'</td>'}).join('')+
+        '<td><b>'+sec(r.total)+'</b></td><td>'+(r.p.sign?'<button class="btn sm ghost" data-sg="'+esc(r.id)+'">서명</button> ':'')+'<button class="btn sm red" data-del="'+esc(r.id)+'">삭제</button></td></tr>').join('')+'</table></div>':'<p>아직 기록이 없어요.</p>')+
+      '<div class="row" style="margin-top:12px"><button class="btn sm red" id="clr">전체 삭제</button></div>';
+    $$('[data-sg]').forEach(b=>b.onclick=()=>{const r=list.find(x=>x.id===b.dataset.sg);modal('<h3>'+esc(r.p.name)+' 서명</h3><img alt="서명" src="'+esc(r.p.sign)+'" style="width:100%;border:2px solid var(--line);border-radius:10px"><br><br><button class="btn" id="c">닫기</button>',(l,c)=>{$('#c',l).onclick=c})});
+    $$('[data-del]').forEach(b=>b.onclick=()=>confirmBox('이 기록을 삭제할까요?','삭제',()=>delRec(b.dataset.del,draw)));
+    $('#clr').onclick=()=>confirmBox('모든 기록을 삭제할까요? 되돌릴 수 없어요.','전체 삭제',async()=>{for(const r of list)await delRec(r.id,null);draw()});
+  };
+  $('#rf').onclick=draw;
+  $('#csv').onclick=()=>{
+    const l=window._recs||[];if(!l.length){toast('기록이 없어요');return}
+    const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+    const head=['순위','번호','이름','학년','반','번호(학급)'].concat(CFG.books.flatMap(b=>[b.title+' 기록(ms)',b.title+' 차이(ms)'])).concat(['총 차이(ms)','시각']);
+    const rows=l.map((r,i)=>[i+1,noStr(r.n),r.p.name,r.p.grade,r.p.klass,r.p.num].concat(CFG.books.flatMap(b=>{const x=(r.res||[]).find(z=>z.bid===b.id);return x?[x.ms,x.diff]:['','']})).concat([r.total,new Date(r.ts).toLocaleString('ko-KR')]));
+    const csv='﻿'+[head].concat(rows).map(r=>r.map(q).join(',')).join('\r\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='doraksil-records.csv';a.click();
+  };
+  draw();
+}
+async function delRec(id,cb){
+  Recs.delLocal(id);
+  for(const p of ['records/'+id,'board/'+id]){try{await Cloud.del(p,true)}catch(e){Q.push({m:'DELETE',p,adm:true})}}
+  cb&&cb();
+}
+/* --- 클라우드 --- */
+function paneCloud(p){
+  p.innerHTML='<div class="card"><h3>클라우드 상태</h3><p>로그인: <b>'+esc(Auth.id.email)+'</b></p><p>전송 대기: <b id="qn">'+Q.list().length+'</b>건</p><p>Firebase: <code class="k">'+esc(FB.url)+'</code><br>경로: <code class="k">/'+FB.root+'</code></p>'+
+    '<div class="row"><button class="btn sm" id="tst">연결 테스트</button><button class="btn sm ghost" id="fl">지금 전송</button><button class="btn sm ghost" id="pl">클라우드 설정 받기</button></div><p id="tm" class="muted"></p></div>'+
+    '<div class="card"><h3>데이터베이스 규칙</h3><p class="muted">처음 한 번, Firebase 콘솔 → Realtime Database → 규칙에 <code class="k">database.rules.json</code>의 <code class="k">dr</code> 블록을 추가해 게시해야 클라우드 저장이 돼요. 규칙이 없어도 앱은 이 기기에서 동작해요.</p></div>';
+  $('#tst').onclick=async()=>{const m=$('#tm');m.textContent='확인 중…';try{await Cloud.get('cfg',false);const a=await Cloud.get('records',true);m.textContent='읽기·관리자 권한 모두 정상이에요.'}catch(e){m.textContent=e.kind==='net'?'네트워크 연결 안 됨':'규칙/권한 문제예요. 규칙 게시와 admins 등록을 확인하세요.'}};
+  $('#fl').onclick=async()=>{await Q.flush();$('#qn').textContent=Q.list().length;toast('전송을 시도했어요')};
+  $('#pl').onclick=async()=>{const r=await Updater.settings(true);toast(r.msg)};
+}
+/* --- 업데이트 --- */
+function paneUpd(p){
+  p.innerHTML='<div class="card"><h3>버전</h3><p>'+esc(VER)+'<br>빌드 <code class="k">'+esc(BUILD)+'</code><br>'+esc(BDATE)+'</p>'+
+    '<div class="row"><button class="btn" id="ua">앱 업데이트 확인</button><button class="btn ghost" id="us">설정 업데이트</button></div><p id="um" class="muted"></p></div>'+
+    '<div class="card"><h3>저장소 진단·복구</h3><div id="dg" class="muted">진단 버튼을 눌러 주세요.</div><div class="row" style="margin-top:8px"><button class="btn sm ghost" id="dgb">진단하기</button><button class="btn sm red" id="rp">강제 복구</button></div></div>'+
+    '<div class="card"><h3>앱 설치</h3><button class="btn" id="in">앱 설치하기</button></div>';
+  $('#ua').onclick=()=>Updater.app(false,$('#um'));
+  $('#us').onclick=async()=>{$('#um').textContent='받는 중…';const r=await Updater.settings(true);$('#um').textContent=r.msg};
+  $('#dgb').onclick=async()=>$('#dg').innerHTML=await Updater.diag();
+  $('#rp').onclick=()=>go('repair');
+  $('#in').onclick=Inst.run;
+}
+function paneUrl(p){p.innerHTML='<div class="card"><h3>기능별 주소</h3><p class="muted">폴더 주소와 파라미터 주소 모두 열려요. 예) <code class="k">/doraksil/records/</code> = <code class="k">/doraksil/?admin=rec</code></p>'+PARAMS_HTML()+'</div>'}
+
+/* =====================================================================
+   업데이트 / 서비스 워커 / 복구
+   ===================================================================== */
+const Updater={
+  async remote(){try{const r=await fetchT('version.json?_='+Date.now(),{cache:'no-store'},6000);return r.ok?await r.json():null}catch(e){return null}},
+  /* 설정만 업데이트: 클라우드 cfg 를 받아 이 기기에 저장 */
+  async settings(force){
+    if(!navigator.onLine)return {ok:false,msg:'오프라인이에요. 이 기기에 저장된 설정을 쓰고 있어요.'};
+    try{
+      const c=await Cloud.get('cfg',false,7000);
+      if(!c||!Array.isArray(c.books))return {ok:true,msg:'클라우드에 저장된 설정이 아직 없어요.'};
+      if(!force&&(c.ts||0)<=(CFG.ts||0))return {ok:true,msg:'이미 최신 설정이에요.'};
+      const n=JSON.parse(JSON.stringify(DEF));for(const k of ['ev','fields','opts'])Object.assign(n[k],c[k]||{});n.books=c.books;n.ts=c.ts||Date.now();
+      const changed=(c.ts||0)!==(CFG.ts||0);saveCfgLocal(n);DRAFT=null;
+      return {ok:true,changed,msg:changed?'새 설정을 받았어요.':'이미 최신 설정이에요.'};
+    }catch(e){return {ok:false,msg:e.kind==='net'?'네트워크 오류로 설정을 못 받았어요.':'설정을 받을 수 없어요. (규칙 게시 확인)'}}
+  },
+  async app(hard,out){
+    const say=t=>{if(out)out.textContent=t};
+    if(!navigator.onLine){say('오프라인이에요. 인터넷에 연결한 뒤 다시 눌러 주세요.');return 'off'}
+    say('서버 확인 중…');const v=await Updater.remote();
+    if(!v){say('서버에 연결할 수 없어요.');return 'fail'}
+    const newer=v.build&&v.build!==BUILD;
+    if(!newer&&!hard){say('이미 최신 버전이에요. ('+VER+')');return 'same'}
+    say(hard?'캐시를 지우고 새로 받는 중…':'새 버전을 받는 중…');
+    try{
+      if(hard){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}
+      else{const r=await navigator.serviceWorker.getRegistration();if(r)await r.update()}
+    }catch(e){}
+    say('완료! 새로 시작해요…');await sleep(500);location.replace(base+'?_u='+Date.now().toString(36));return 'done';
+  },
+  async diag(){
+    const out=[];out.push('온라인: '+(navigator.onLine?'예':'아니오'));
+    out.push('서비스 워커: '+('serviceWorker' in navigator?((await navigator.serviceWorker.getRegistration())?'등록됨':'등록 안 됨'):'지원 안 함'));
+    try{const ks=await caches.keys();for(const k of ks){const c=await caches.open(k);const rep=await c.match('__report.json');const n=(await c.keys()).length;let t='';if(rep){const j=await rep.json();t=' · 성공 '+j.ok.length+' / 실패 '+j.fail.length+(j.fail.length?' ('+j.fail.map(f=>esc(f[0])).join(', ')+')':'')}out.push('캐시 '+esc(k)+': '+n+'개'+t)}if(!ks.length)out.push('캐시: 없음 (한 번 온라인으로 열어야 해요)')}catch(e){out.push('캐시 확인 실패')}
+    try{const e=await navigator.storage.estimate();out.push('저장소: '+(e.usage/1048576).toFixed(1)+'MB / '+(e.quota/1048576|0)+'MB')}catch(e){}
+    out.push('이 기기 기록: '+Recs.local().length+'건 · 전송 대기 '+Q.list().length+'건');
+    return out.join('<br>');
+  }
+};
+async function viewUpdate(kind){
+  const hard=P.get('hard')==='1';
+  app().innerHTML='<div class="card hero"><div class="marquee" style="font-size:36px">UPDATE</div><p id="um" style="font-weight:800">준비 중…</p><div class="row" style="justify-content:center"><button class="btn ghost" id="h">처음으로</button></div></div>';
+  $('#h').onclick=()=>go('');const m=$('#um');
+  if(kind==='settings'){m.textContent='설정 확인 중…';const r=await Updater.settings(P.get('force')==='1');m.textContent=r.msg;if(r.ok){await sleep(1200);go('')}}
+  else{const r=await Updater.app(hard,m);if(r==='same'){await sleep(1200);go('')}}
+}
+async function viewRepair(){
+  app().innerHTML='<div class="card"><h2>저장소 진단·복구</h2><div id="dg" class="muted">진단 중…</div><div class="row" style="margin-top:12px"><button class="btn" id="rp">강제 복구 (캐시 삭제 후 새로 설치)</button><button class="btn ghost" id="h">처음으로</button></div><p class="muted">기록과 설정은 지우지 않아요. 앱 파일 캐시만 새로 받아요.</p></div>';
+  $('#h').onclick=()=>go('');$('#dg').innerHTML=await Updater.diag();
+  $('#rp').onclick=()=>Updater.app(true,$('#dg'));
+}
+function viewReset(){
+  const items=[['recs','이 기기의 참여 기록 (클라우드는 그대로)'],['cfg','이 기기의 설정 (책·화면 옵션)'],['q','전송 대기 목록'],['auth','관리자 로그인 정보'],['cache','앱 캐시 (오프라인 저장본)']];
+  const pre=(P.get('reset')||'');const sel=pre==='all'?items.map(i=>i[0]):pre.split(',').map(n=>items[(+n)-1]&&items[(+n)-1][0]).filter(Boolean);
+  app().innerHTML='<div class="card"><h2>초기화</h2><p class="muted">지울 항목을 고르세요. 클라우드 데이터는 지워지지 않아요.</p>'+items.map((it,i)=>'<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" value="'+it[0]+'"'+(sel.includes(it[0])?' checked':'')+'> '+(i+1)+'. '+esc(it[1])+'</label>').join('')+
+    '<div class="row"><button class="btn red" id="go">선택 항목 초기화</button><button class="btn ghost" id="h">취소</button></div></div>';
+  $('#h').onclick=()=>go('');
+  $('#go').onclick=()=>{const c=$$('input:checked').map(x=>x.value);if(!c.length){toast('항목을 골라 주세요');return}
+    confirmBox('선택한 항목을 지워요. 되돌릴 수 없어요.\n'+c.join(', '),'초기화',async()=>{
+      if(c.includes('recs'))store.del('recs'),store.del('cnt'),store.del('boardCache');
+      if(c.includes('cfg'))store.del('cfg');if(c.includes('q'))store.del('q');
+      if(c.includes('auth'))Auth.clear();
+      if(c.includes('cache')){try{(await caches.keys()).forEach(k=>caches.delete(k));(await navigator.serviceWorker.getRegistrations()).forEach(r=>r.unregister())}catch(e){}}
+      toast('초기화했어요. 새로 시작해요');await sleep(900);location.replace(base);
+    })};
+}
+
+/* ---------- 라우터 ---------- */
+function route(){
+  const q=new URLSearchParams(location.search);
+  [...P.keys()].forEach(k=>P.delete(k));q.forEach((v,k)=>P.append(k,v));
+  clearInterval(S.bt);S.keyOff&&S.keyOff();clearTimeout(S.auto);
+  if(P.has('admin'))viewAdmin();
+  else if(P.has('board'))viewBoard();
+  else if(P.has('guide'))viewGuide();
+  else if(P.has('update'))viewUpdate(P.get('update'));
+  else if(P.has('repair'))viewRepair();
+  else if(P.has('reset'))viewReset();
+  else viewWelcome();
+  renderTop();window.scrollTo(0,0);
+}
+
+/* ---------- 서비스 워커 등록 + 자동 업데이트 ---------- */
+let reloading=false;
+function initSW(){
+  if(!('serviceWorker' in navigator))return;
+  navigator.serviceWorker.register('sw.js?b='+encodeURIComponent(BUILD),{scope:'./'}).catch(()=>{});
+  navigator.serviceWorker.addEventListener('message',e=>{
+    if(e.data&&e.data.type==='updated'&&!reloading){
+      const idle=!P.has('admin')&&!S.running&&!S.res.length&&!S.rec;
+      if(idle){reloading=true;location.reload()}
+      else toast('새 버전이 있어요','지금 업데이트',()=>{reloading=true;location.reload()},20000);
+    }
+  });
+}
+async function bgCheck(){
+  if(!navigator.onLine)return;
+  const r=await Updater.settings(false);if(r.changed&&!S.running&&!S.res.length&&!P.has('admin')){route();toast('설정이 업데이트됐어요')}
+  const v=await Updater.remote();
+  if(v&&v.build&&BUILD&&BUILD!=='dev'&&v.build!==BUILD)toast('새 앱 버전이 있어요','업데이트',()=>Updater.app(false));
+}
+
+/* ---------- 시작 ---------- */
+Auth.load();
+route();initSW();
+window.addEventListener('load',()=>{Q.flush();setTimeout(bgCheck,1500);setInterval(bgCheck,10*60*1000);setInterval(()=>Q.flush(),30000)});
+</script>
+</body>
+</html>
