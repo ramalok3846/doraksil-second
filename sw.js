@@ -4,11 +4,11 @@
    - 인터넷이 되면 '서버 최신본 우선'(최대 4초) → 느리거나 끊기면 저장본으로 즉시 실행
    - 새 빌드를 받으면 화면에 알려 안전한 때(시작 화면)에 자동 새로고침
    - 설치는 절대 실패시키지 않고(파일마다 3번 재시도) 무엇이 저장 안 됐는지 __report.json 에 기록 */
-const V='dr-v'+'3780933438ac';
+const V='dr-v'+'e8d8479bc9f5';
 const ASSETS=['./','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','icon-maskable-512.png'];
 const SCOPE=new URL('./',self.location).pathname;
 /* 기능별 주소(폴더) → 앱 파라미터 주소. 오프라인에서도 동작해요 */
-const ROUTES={admin:'?admin',books:'?admin=books',records:'?admin=rec',settings:'?admin=set',fields:'?admin=fields',cloud:'?admin=cloud',board:'?board',guide:'?guide',repair:'?repair',reset:'?reset','update-app':'?update=app','update-settings':'?update=settings'};
+const ROUTES={admin:'?admin',books:'?admin=books',records:'?admin=rec',settings:'?admin=set',site:'?admin=site',theme:'?admin=site',fields:'?admin=fields',cloud:'?admin=cloud',board:'?board',guide:'?guide',repair:'?repair',reset:'?reset','update-app':'?update=app','update-settings':'?update=settings'};
 const clean=async res=>(res&&res.redirected)?new Response(await res.blob(),{status:200,statusText:'OK',headers:res.headers}):res;
 const build=t=>{const m=/name="pq-build" content="([^"]+)"/.exec(t||'');return m?m[1]:''};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));

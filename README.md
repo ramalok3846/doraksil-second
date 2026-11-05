@@ -20,8 +20,8 @@
 | 설치 실패 없는 프리캐시 + 진단 | 파일별 3회 재시도, `__report.json`, `?repair` |
 
 ## 주소 (파라미터)
-`?admin` `?admin=books|rec|fields|set|cloud|upd|url` · `?board` · `?guide` · `?update=app|settings` · `?repair` · `?reset[=1,3|all]`
-폴더형: `/admin/ /books/ /records/ /fields/ /settings/ /cloud/ /board/ /guide/ /repair/ /reset/ /update-app/ /update-settings/`
+`?admin` `?admin=books|rec|fields|site|set|cloud|upd|url` · `?board` · `?guide` · `?update=app|settings` · `?repair` · `?reset[=1,3|all]`
+폴더형: `/admin/ /books/ /records/ /fields/ /site/ /theme/ /settings/ /cloud/ /board/ /guide/ /repair/ /reset/ /update-app/ /update-settings/`
 
 ## 처음 한 번 설정
 1. **Firebase 규칙**: 콘솔 → Realtime Database → 규칙에 `database.rules.json` 의 `dr` 블록 추가 후 게시 (홈페이지 리포 `database.rules.all.json` 에는 이미 합쳐 둠). 규칙 없이도 앱은 기기 안에서 동작.
@@ -41,6 +41,7 @@ python3 tools/stamp.py 1.0.1   # 빌드 해시·버전·sw 캐시명·version.js
 
 ## 알아둘 점 (초안 한계)
 - 참여 번호는 클라우드 카운터(오르기만 가능 규칙)로 발급, 오프라인이면 기기 번호(`*` 표시) — 기기 간 중복 가능.
+- 관리자 > 사이트·테마: 사이트 제목·짧은 이름·테마 색(프리셋/직접 선택)·파비콘·상단바 로고를 바꾸면 저장 시 모든 기기에 적용(설치용 매니페스트도 따라감). 설정 백업/복원은 ☁ 탭.
 - 서명·표지는 이미지를 줄여 DB 문자열로 저장(표지 약 520px). 책은 최대 12권.
 - 순위판은 공개 읽기(`board`)이며 이름 표시 방식(가림/전체/번호만)은 관리자에서 선택. 상세 기록(`records`·서명)은 관리자만 읽음.
 - 클라이언트 앱이라 기기 안 데이터는 완전한 보안이 아님(관리자 권한은 Firebase 규칙이 보장).

@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#b9a4f0">
-<meta name="pq-build" content="3780933438ac">
-<meta name="pq-ver" content="Doraksil v.1.0.0">
-<meta name="pq-date" content="2026-11-05 14:28 KST">
+<meta name="pq-build" content="e8d8479bc9f5">
+<meta name="pq-ver" content="Doraksil v.1.1.0">
+<meta name="pq-date" content="2026-11-05 14:35 KST">
 <meta name="robots" content="noindex">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -17,7 +17,7 @@
 <title>도락실 · 초 맞추기</title>
 <style>
 :root{
-  --bg:#f3eeff;--bg2:#e9e0ff;--card:#fff;--p:#b9a4f0;--p2:#8f73e0;--p3:#6b4fc4;--ink:#2a2050;--mute:#7b7399;
+  --bg:#f3eeff;--bg2:#e9e0ff;--card:#fff;--p:#b9a4f0;--p2:#8f73e0;--p3:#6b4fc4;--ink:#2a2050;--mute:#7b7399;--grid:#b9a4f01f;
   --line:#d9ccf7;--ok:#2e9e6b;--bad:#d1456b;--warn:#e0a526;
   --sh:0 4px 0 var(--p2);--r:18px;
   font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif;
@@ -27,8 +27,8 @@ html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
 body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;
   background:
    radial-gradient(circle at 15% 10%,#fff8 0,#fff0 40%),
-   repeating-linear-gradient(0deg,#0000 0 23px,#b9a4f01f 23px 24px),
-   repeating-linear-gradient(90deg,#0000 0 23px,#b9a4f01f 23px 24px),var(--bg);
+   repeating-linear-gradient(0deg,#0000 0 23px,var(--grid) 23px 24px),
+   repeating-linear-gradient(90deg,#0000 0 23px,var(--grid) 23px 24px),var(--bg);
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 button,input,select,textarea{font:inherit;color:inherit}
 a{color:var(--p3)}
@@ -36,6 +36,9 @@ a{color:var(--p3)}
 .top b{font-size:18px;letter-spacing:.5px}
 .top .sp{flex:1}
 .pill{font-size:12px;font-weight:800;padding:4px 9px;border-radius:99px;background:#fff;border:2px solid var(--p2);white-space:nowrap}
+.top img.lg{height:26px;width:auto;border-radius:6px}
+.sw{display:inline-block;width:34px;height:34px;border-radius:10px;border:3px solid var(--p3);cursor:pointer;vertical-align:middle;margin:2px}
+.fav{width:48px;height:48px;border:3px solid var(--p2);border-radius:12px;background:var(--bg2) center/cover no-repeat;display:inline-block;vertical-align:middle}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:5px;vertical-align:1px}
 .dot.off{background:var(--bad)}.dot.syn{background:var(--warn)}
 main{flex:1;width:100%;max-width:980px;margin:0 auto;padding:16px 14px 28px}
@@ -67,8 +70,9 @@ textarea.in{min-height:80px;resize:vertical}
 .bk .cv{width:150px;height:205px;border:3px solid var(--p2);border-radius:10px;background:var(--bg2) center/cover no-repeat;display:grid;place-items:center;font-size:40px;box-shadow:var(--sh)}
 .bk b{display:block;margin-top:8px;font-size:14px}
 .cab{border:5px solid var(--p3);border-radius:24px;background:linear-gradient(#fff,#f6f1ff);padding:14px;text-align:center;box-shadow:0 6px 0 var(--p2)}
-.screen{background:#2a2050;color:#e9e0ff;border:4px solid var(--p3);border-radius:14px;padding:14px 8px;margin:12px 0}
-.digits{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-weight:900;font-size:clamp(40px,14vw,92px);letter-spacing:1px;font-variant-numeric:tabular-nums;color:#d8c8ff}
+.top{color:var(--ink)}
+.screen{background:var(--ink);color:var(--bg2);border:4px solid var(--p3);border-radius:14px;padding:14px 8px;margin:12px 0}
+.digits{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-weight:900;font-size:clamp(40px,14vw,92px);letter-spacing:1px;font-variant-numeric:tabular-nums;color:var(--line)}
 .digits.run{color:#fff}
 .target{font-size:clamp(28px,9vw,54px);font-weight:900;color:var(--p3)}
 .step{display:flex;gap:6px;justify-content:center;margin-bottom:10px}
@@ -140,6 +144,7 @@ const DEF={
     {id:'b1',title:'도서부 추천도서 1',author:'',call:'201',cover:''},
     {id:'b2',title:'도서부 추천도서 2',author:'',call:'305',cover:''}
   ],
+  site:{title:'도락실',short:'도락실',emoji:'🕹',color:'#b9a4f0',favicon:'',logo:''},
   fields:{name:'req',grade:'req',klass:'req',num:'opt',sign:'opt'},
   opts:{hideAfter:0,boardName:'masked',showBoardOnResult:true,autoReset:0},
   ts:0
@@ -148,10 +153,46 @@ const FB={url:'https://pal-inte-db-default-rtdb.asia-southeast1.firebasedatabase
 let CFG=loadCfg();
 function loadCfg(){
   const s=store.get('cfg',null);const c=JSON.parse(JSON.stringify(DEF));
-  if(s){for(const k of ['ev','fields','opts'])Object.assign(c[k],s[k]||{});if(Array.isArray(s.books)&&s.books.length)c.books=s.books;c.ts=s.ts||0}
+  if(s){for(const k of ['ev','fields','opts','site'])Object.assign(c[k],s[k]||{});if(Array.isArray(s.books)&&s.books.length)c.books=s.books;c.ts=s.ts||0}
   return c;
 }
-function saveCfgLocal(c){CFG=c;store.set('cfg',c)}
+function saveCfgLocal(c){CFG=c;store.set('cfg',c);applySite()}
+
+/* ---------- 사이트 제목 · 테마 색 · 파비콘 (관리자에서 변경) ---------- */
+function hex2hsl(h){
+  h=String(h||'').replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');
+  if(!/^[0-9a-f]{6}$/i.test(h))h='b9a4f0';
+  let r=parseInt(h.slice(0,2),16)/255,g=parseInt(h.slice(2,4),16)/255,b=parseInt(h.slice(4,6),16)/255;
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn;let hh=0,s=0;
+  if(d){s=d/(1-Math.abs(2*l-1));hh=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;hh=Math.round(hh*60);if(hh<0)hh+=360}
+  return [hh,Math.round(s*100),Math.round(l*100)];
+}
+function applyTheme(color){
+  const [h,s0,l0]=hex2hsl(color),s=Math.max(30,s0),l=Math.min(82,Math.max(40,l0));
+  const R=document.documentElement.style,H=(a,b)=>'hsl('+h+','+Math.min(100,a)+'%,'+b+'%)';
+  R.setProperty('--p',H(s,l));R.setProperty('--p2',H(s,Math.max(22,l-16)));R.setProperty('--p3',H(s,Math.max(15,l-30)));
+  R.setProperty('--bg',H(80,96));R.setProperty('--bg2',H(75,92));R.setProperty('--line',H(60,87));
+  R.setProperty('--ink',H(45,19));R.setProperty('--mute',H(14,48));R.setProperty('--grid','hsla('+h+','+s+'%,'+l+'%,.12)');
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=H(s,l);
+}
+function applySite(){
+  const S=CFG.site||DEF.site;applyTheme(S.color);
+  document.title=(S.title||'도락실')+' · 초 맞추기';
+  const ic=S.favicon||'icon.svg';
+  for(const l of document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]')){l.href=S.favicon||(l.rel==='icon'?'icon.svg':'icon-192.png');if(l.rel==='icon')l.type=S.favicon?'image/png':'image/svg+xml'}
+  /* 설치용 매니페스트도 사이트 이름·색에 맞춰요 (기본값이면 원래 파일 그대로) */
+  try{
+    const custom=S.title!==DEF.site.title||S.short!==DEF.site.short||S.color!==DEF.site.color||S.favicon;
+    const lk=document.querySelector('link[rel="manifest"]');if(!lk)return;
+    if(!lk.dataset.orig)lk.dataset.orig=lk.getAttribute('href');
+    if(!custom){lk.href=lk.dataset.orig;return}
+    const abs=new URL('./',location.href).href,c=getComputedStyle(document.documentElement);
+    const mf={name:(S.title||'도락실')+' · 초 맞추기',short_name:S.short||S.title||'도락실',id:abs,start_url:abs,scope:abs,display:'standalone',lang:'ko',
+      background_color:c.getPropertyValue('--bg').trim()||'#f3eeff',theme_color:c.getPropertyValue('--p').trim()||'#b9a4f0',
+      icons:S.favicon?[{src:S.favicon,sizes:'128x128',type:'image/png',purpose:'any'}]:[{src:abs+'icon-192.png',sizes:'192x192',type:'image/png'},{src:abs+'icon-512.png',sizes:'512x512',type:'image/png'}]};
+    lk.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));
+  }catch(e){}
+}
 
 /* ---------- 계산 ---------- */
 /* 청구기호의 첫 숫자 덩어리 ÷ 100 = 목표(초).  201 → 2.01초,  813 → 8.13초 */
@@ -305,7 +346,8 @@ function confirmBox(msg,okText,fn){
 function renderTop(){
   const t=$('#top');if(!t)return;
   const st=!navigator.onLine?['off','오프라인']:net.state==='syn'?['syn','전송 중']:Q.list().length?['syn','전송 대기 '+Q.list().length]:['','온라인'];
-  t.innerHTML='<b>🕹 도락실</b><span class="sp"></span><span class="pill"><span class="dot '+st[0]+'"></span>'+st[1]+'</span>'+
+  const SS=CFG.site||DEF.site;
+  t.innerHTML=(SS.logo?'<img class="lg" alt="" src="'+esc(SS.logo)+'">':'')+'<b>'+esc((SS.logo?'':(SS.emoji||'')+' ')+(SS.title||'도락실'))+'</b><span class="sp"></span><span class="pill"><span class="dot '+st[0]+'"></span>'+st[1]+'</span>'+
     (Inst.can?'<button class="btn sm ghost" id="inst">앱 설치</button>':'');
   const b=$('#inst');if(b)b.onclick=Inst.run;
   const f=$('#foot');if(f)f.innerHTML=esc(VER)+' · 빌드 '+esc(BUILD.slice(0,8))+' · <a href="?admin" data-go="admin">관리자</a> · <a href="?board" data-go="board">순위판</a> · <a href="?guide" data-go="guide">안내</a>';
@@ -429,7 +471,7 @@ async function viewResult(){
   const r=S.rec;
   app().innerHTML='<div class="cab"><div class="muted">참여 번호</div><div class="big-num">'+noStr(r.n)+'</div>'+
     (r.off?'<div class="muted">오프라인에서 받은 번호예요. 온라인이 되면 자동 전송돼요.</div>':'')+
-    '<div class="screen"><table style="color:#e9e0ff">'+r.res.map(x=>'<tr><td>'+esc(x.title)+'</td><td>목표 '+sec(x.target)+'</td><td>내 기록 '+fmt(x.ms)+'</td><td>차이 <b>'+sec(x.diff)+'</b></td></tr>').join('')+'</table></div>'+
+    '<div class="screen"><table style="color:var(--bg2)">'+r.res.map(x=>'<tr><td>'+esc(x.title)+'</td><td>목표 '+sec(x.target)+'</td><td>내 기록 '+fmt(x.ms)+'</td><td>차이 <b>'+sec(x.diff)+'</b></td></tr>').join('')+'</table></div>'+
     '<div class="muted">총 차이 (작을수록 승리)</div><div class="big-num">'+sec(r.total)+'</div><div id="rk" class="muted">순위 계산 중…</div>'+
     '<div class="row" style="justify-content:center;margin-top:12px"><button class="btn" id="again">처음으로</button>'+(CFG.opts.showBoardOnResult?'<button class="btn ghost" id="bd">🏆 순위판</button>':'')+'</div></div>'+
     (CFG.opts.showBoardOnResult?'<div class="card" id="bdcard"></div>':'');
@@ -456,7 +498,7 @@ function viewGuide(){
   $('#h').onclick=()=>go('');
 }
 function PARAMS_HTML(){
-  const rows=[['./','처음 화면'],['?admin','관리자 (/admin/)'],['?admin=books','관리자 · 책 등록 (/books/)'],['?admin=rec','관리자 · 참여·결과 (/records/)'],['?admin=set','관리자 · 설정 (/settings/)'],['?admin=cloud','관리자 · 클라우드 (/cloud/)'],['?board','순위판 (/board/)'],['?guide','이용 안내 (/guide/)'],['?update=settings','설정만 업데이트 (/update-settings/)'],['?update=app','앱 업데이트 (/update-app/)'],['?update=app&hard=1','앱 강력 업데이트(캐시 삭제)'],['?repair','저장소 진단·복구 (/repair/)'],['?reset','초기화 선택 (/reset/)']];
+  const rows=[['./','처음 화면'],['?admin','관리자 (/admin/)'],['?admin=books','관리자 · 책 등록 (/books/)'],['?admin=rec','관리자 · 참여·결과 (/records/)'],['?admin=site','관리자 · 사이트 제목·테마·파비콘 (/site/ , /theme/)'],['?admin=set','관리자 · 설정 (/settings/)'],['?admin=cloud','관리자 · 클라우드 (/cloud/)'],['?board','순위판 (/board/)'],['?guide','이용 안내 (/guide/)'],['?update=settings','설정만 업데이트 (/update-settings/)'],['?update=app','앱 업데이트 (/update-app/)'],['?update=app&hard=1','앱 강력 업데이트(캐시 삭제)'],['?repair','저장소 진단·복구 (/repair/)'],['?reset','초기화 선택 (/reset/)']];
   return '<div class="tw"><table>'+rows.map(r=>'<tr><td><code class="k">'+esc(r[0])+'</code></td><td>'+esc(r[1])+'</td></tr>').join('')+'</table></div>';
 }
 
@@ -464,17 +506,18 @@ function PARAMS_HTML(){
    관리자
    ===================================================================== */
 let AT='rec',DRAFT=null;
-const ATABS=[['rec','🏆 참여·결과'],['books','📚 책 등록'],['fields','📝 참여 입력'],['set','⚙ 화면·게임'],['cloud','☁ 로그인·클라우드'],['upd','🔄 업데이트'],['url','🔗 주소']];
-const TAB_ALIAS={rec:'rec',books:'books',qa:'books',fields:'fields',in:'fields',set:'set',cloud:'cloud',upd:'upd',url:'url'};
+const ATABS=[['rec','🏆 참여·결과'],['books','📚 책 등록'],['fields','📝 참여 입력'],['site','🎨 사이트·테마'],['set','⚙ 화면·게임'],['cloud','☁ 로그인·클라우드'],['upd','🔄 업데이트'],['url','🔗 주소']];
+const TAB_ALIAS={site:'site',theme:'site',rec:'rec',books:'books',qa:'books',fields:'fields',in:'fields',set:'set',cloud:'cloud',upd:'upd',url:'url'};
 function viewAdmin(){
   const q=P.get('admin');if(q!==null&&q!==''&&TAB_ALIAS[q])AT=TAB_ALIAS[q];
+  if(!Auth.id){viewLogin();return}
   if(!Auth.id){viewLogin();return}
   if(!DRAFT)DRAFT=JSON.parse(JSON.stringify(CFG));
   app().innerHTML='<div class="card"><div class="row"><h2 style="margin:0;flex:1">관리자</h2><span class="pill">'+esc(Auth.id.email||'')+'</span><button class="btn sm ghost" id="lo">로그아웃</button></div></div>'+
     '<div class="tabs">'+ATABS.map(t=>'<button data-t="'+t[0]+'" class="'+(AT===t[0]?'on':'')+'">'+t[1]+'</button>').join('')+'</div><div id="pane"></div>';
   $('#lo').onclick=()=>{Auth.clear();DRAFT=null;toast('로그아웃했어요');viewAdmin()};
   $$('.tabs button').forEach(b=>b.onclick=()=>{collect();AT=b.dataset.t;history.replaceState(null,'',base+'?admin='+AT);viewAdmin()});
-  ({rec:paneRec,books:paneBooks,fields:paneFields,set:paneSet,cloud:paneCloud,upd:paneUpd,url:paneUrl}[AT])($('#pane'));
+  ({rec:paneRec,books:paneBooks,fields:paneFields,site:paneSite,set:paneSet,cloud:paneCloud,upd:paneUpd,url:paneUrl}[AT])($('#pane'));
 }
 function viewLogin(){
   app().innerHTML='<div class="card"><h2>🔐 관리자 로그인</h2><p class="muted">Firebase 계정으로 로그인해요. 데이터베이스 <code class="k">admins/{uid}=true</code> 로 등록된 계정만 설정을 바꿀 수 있어요.</p>'+
@@ -502,6 +545,9 @@ function collect(){
   if(AT==='books'){
     $$('.bcard').forEach(el=>{const b=DRAFT.books.find(x=>x.id===el.dataset.id);if(!b)return;
       b.title=$('.b_t',el).value.trim();b.author=$('.b_a',el).value.trim();b.call=$('.b_c',el).value.trim()})
+  }else if(AT==='site'){
+    const g=id=>{const e=$('#'+id);return e?e.value.trim():''};
+    DRAFT.site.title=g('st_title')||'도락실';DRAFT.site.short=g('st_short')||DRAFT.site.title;DRAFT.site.emoji=g('st_emoji');
   }else if(AT==='fields'){
     for(const k of Object.keys(DRAFT.fields)){const r=$('input[name="fd_'+k+'"]:checked');if(r)DRAFT.fields[k]=r.value}
   }else if(AT==='set'){
@@ -519,12 +565,12 @@ function bindSave(){
     collect();
     if(!DRAFT.books.length){toast('책이 한 권 이상 필요해요');return}
     if(DRAFT.books.some(b=>!b.title||!targetMs(b))){toast('책 제목과 청구기호(숫자)를 확인해 주세요');return}
-    DRAFT.ts=Date.now();saveCfgLocal(JSON.parse(JSON.stringify(DRAFT)));
+    DRAFT.site.short=DRAFT.site.short||DRAFT.site.title;DRAFT.ts=Date.now();saveCfgLocal(JSON.parse(JSON.stringify(DRAFT)));
     const m=$('#svm');m.textContent='저장 중…';
     try{await Cloud.put('cfg',CFG,true);m.textContent='저장 완료 · 클라우드에도 올렸어요.';toast('저장했어요')}
     catch(e){Q.push({m:'PUT',p:'cfg',b:CFG,adm:true});m.textContent=e.kind==='auth'?'이 기기에는 저장됐지만 클라우드 권한이 없어요. 다시 로그인해 주세요.':'이 기기에 저장했어요. 온라인이 되면 클라우드에 올라가요.'}
   };
-  $('#rv').onclick=()=>{DRAFT=JSON.parse(JSON.stringify(CFG));viewAdmin()};
+  $('#rv').onclick=()=>{DRAFT=JSON.parse(JSON.stringify(CFG));applySite();viewAdmin()};
 }
 
 /* --- 책 등록 --- */
@@ -551,10 +597,10 @@ function paneBooks(p){
   $('#add').onclick=()=>{collect();DRAFT.books.push({id:'b'+uid(),title:'새 책',author:'',call:'101',cover:''});viewAdmin()};
   bindSave();
 }
-function shrink(file,max){
+function shrink(file,max,type){
   return new Promise((res,rej)=>{
     const u=URL.createObjectURL(file),im=new Image();
-    im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.78))};
+    im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);res(type==='image/png'?c.toDataURL('image/png'):c.toDataURL('image/jpeg',.78))};
     im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};im.src=u;
   });
 }
@@ -570,6 +616,32 @@ function paneFields(p){
     const m={a:{name:'req',grade:'req',klass:'req',num:'opt',sign:'opt'},b:{name:'opt',grade:'opt',klass:'opt',num:'opt',sign:'opt'},c:{name:'req',grade:'off',klass:'off',num:'off',sign:'off'}}[b.dataset.pre];
     Object.assign(DRAFT.fields,m);viewAdmin();
   });
+  bindSave();
+}
+/* --- 사이트·테마 --- */
+const PRESETS=[['#b9a4f0','연보라'],['#f4a6c8','분홍'],['#8ec5ff','하늘'],['#8fd6b0','민트'],['#ffc978','살구'],['#ff9a8b','코랄'],['#c3b1e1','라벤더'],['#a0a8c0','회청']];
+function paneSite(p){
+  const S=DRAFT.site;
+  p.innerHTML='<div class="card"><h3>사이트 이름</h3>'+
+    '<label class="f">사이트 제목 <small>(상단바·브라우저 탭 제목)</small><input class="in" id="st_title" maxlength="30" value="'+esc(S.title)+'"></label>'+
+    '<div class="grid2"><label class="f">앱 아이콘 아래 짧은 이름 <small>(설치 시)</small><input class="in" id="st_short" maxlength="12" value="'+esc(S.short)+'"></label>'+
+    '<label class="f">상단바 이모지 <small>(로고가 없을 때)</small><input class="in" id="st_emoji" maxlength="4" value="'+esc(S.emoji)+'"></label></div></div>'+
+    '<div class="card"><h3>테마 색</h3><p class="muted">고른 색으로 버튼·테두리·배경이 모두 바뀌어요.</p>'+
+    '<div>'+PRESETS.map(c=>'<span class="sw" data-c="'+c[0]+'" title="'+c[1]+'" style="background:'+c[0]+'"></span>').join('')+'</div>'+
+    '<label class="f" style="margin-top:10px">직접 고르기 <input type="color" id="st_color" value="'+esc(/^#[0-9a-f]{6}$/i.test(S.color)?S.color:'#b9a4f0')+'" style="width:70px;height:40px;vertical-align:middle;border:3px solid var(--p2);border-radius:10px;padding:0;background:#fff"></label>'+
+    '<p class="muted">미리보기는 이 화면에서 바로 보여요. 저장하면 모든 기기에 적용돼요.</p></div>'+
+    '<div class="card"><h3>파비콘 · 로고</h3><p class="muted">파비콘은 정사각형 이미지가 좋아요(자동으로 128px로 줄여요).</p>'+
+    '<div class="row"><span class="fav" id="favp" style="'+(S.favicon?'background-image:url('+esc(S.favicon)+')':'')+'"></span><button class="btn sm" id="favb">파비콘 선택</button><button class="btn sm ghost" id="favx">기본으로</button></div>'+
+    '<div class="row" style="margin-top:12px"><span class="fav" id="lgp" style="'+(S.logo?'background-image:url('+esc(S.logo)+')':'')+'"></span><button class="btn sm" id="lgb">상단바 로고 선택</button><button class="btn sm ghost" id="lgx">로고 없애기</button></div></div>'+
+    '<div class="card"><button class="btn sm ghost" id="rst">사이트·테마 기본값으로</button></div>'+savebar();
+  const pick=(btn,key,size)=>{$(btn).onclick=()=>{const f=document.createElement('input');f.type='file';f.accept='image/*';f.onchange=async()=>{if(!f.files[0])return;collect();try{DRAFT.site[key]=await shrink(f.files[0],size,'image/png');viewAdmin()}catch(e){toast('이미지를 읽을 수 없어요')}};f.click()}};
+  pick('#favb','favicon',128);pick('#lgb','logo',160);
+  $('#favx').onclick=()=>{collect();DRAFT.site.favicon='';applySite();viewAdmin()};
+  $('#lgx').onclick=()=>{collect();DRAFT.site.logo='';viewAdmin()};
+  const setColor=c=>{collect();DRAFT.site.color=c;applyTheme(c);$('#st_color').value=c};
+  $$('.sw').forEach(s=>s.onclick=()=>setColor(s.dataset.c));
+  $('#st_color').oninput=e=>{DRAFT.site.color=e.target.value;applyTheme(e.target.value)};
+  $('#rst').onclick=()=>{collect();DRAFT.site=Object.assign({},DEF.site);applyTheme(DEF.site.color);viewAdmin()};
   bindSave();
 }
 /* --- 화면·게임 --- */
@@ -621,10 +693,13 @@ async function delRec(id,cb){
 function paneCloud(p){
   p.innerHTML='<div class="card"><h3>클라우드 상태</h3><p>로그인: <b>'+esc(Auth.id.email)+'</b></p><p>전송 대기: <b id="qn">'+Q.list().length+'</b>건</p><p>Firebase: <code class="k">'+esc(FB.url)+'</code><br>경로: <code class="k">/'+FB.root+'</code></p>'+
     '<div class="row"><button class="btn sm" id="tst">연결 테스트</button><button class="btn sm ghost" id="fl">지금 전송</button><button class="btn sm ghost" id="pl">클라우드 설정 받기</button></div><p id="tm" class="muted"></p></div>'+
+    '<div class="card"><h3>설정 백업·복원</h3><p class="muted">책·화면·테마 설정을 파일로 저장하거나 불러와요. (참여 기록은 CSV 로 따로 받아요)</p><div class="row"><button class="btn sm" id="bk">설정 내려받기</button><button class="btn sm ghost" id="rs">설정 불러오기</button></div></div>'+
     '<div class="card"><h3>데이터베이스 규칙</h3><p class="muted">처음 한 번, Firebase 콘솔 → Realtime Database → 규칙에 <code class="k">database.rules.json</code>의 <code class="k">dr</code> 블록을 추가해 게시해야 클라우드 저장이 돼요. 규칙이 없어도 앱은 이 기기에서 동작해요.</p></div>';
   $('#tst').onclick=async()=>{const m=$('#tm');m.textContent='확인 중…';try{await Cloud.get('cfg',false);const a=await Cloud.get('records',true);m.textContent='읽기·관리자 권한 모두 정상이에요.'}catch(e){m.textContent=e.kind==='net'?'네트워크 연결 안 됨':'규칙/권한 문제예요. 규칙 게시와 admins 등록을 확인하세요.'}};
   $('#fl').onclick=async()=>{await Q.flush();$('#qn').textContent=Q.list().length;toast('전송을 시도했어요')};
   $('#pl').onclick=async()=>{const r=await Updater.settings(true);toast(r.msg)};
+  $('#bk').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(CFG,null,1)],{type:'application/json'}));a.download='doraksil-settings.json';a.click()};
+  $('#rs').onclick=()=>{const f=document.createElement('input');f.type='file';f.accept='.json,application/json';f.onchange=async()=>{try{const c=JSON.parse(await f.files[0].text());if(!Array.isArray(c.books)||!c.books.length)throw 0;const n=JSON.parse(JSON.stringify(DEF));for(const k of ['ev','fields','opts','site'])Object.assign(n[k],c[k]||{});n.books=c.books;n.ts=Date.now();DRAFT=n;toast('불러왔어요. 확인 후 저장하세요');AT='set';viewAdmin()}catch(e){toast('설정 파일이 올바르지 않아요')}};f.click()};
 }
 /* --- 업데이트 --- */
 function paneUpd(p){
@@ -652,7 +727,7 @@ const Updater={
       const c=await Cloud.get('cfg',false,7000);
       if(!c||!Array.isArray(c.books))return {ok:true,msg:'클라우드에 저장된 설정이 아직 없어요.'};
       if(!force&&(c.ts||0)<=(CFG.ts||0))return {ok:true,msg:'이미 최신 설정이에요.'};
-      const n=JSON.parse(JSON.stringify(DEF));for(const k of ['ev','fields','opts'])Object.assign(n[k],c[k]||{});n.books=c.books;n.ts=c.ts||Date.now();
+      const n=JSON.parse(JSON.stringify(DEF));for(const k of ['ev','fields','opts','site'])Object.assign(n[k],c[k]||{});n.books=c.books;n.ts=c.ts||Date.now();
       const changed=(c.ts||0)!==(CFG.ts||0);saveCfgLocal(n);DRAFT=null;
       return {ok:true,changed,msg:changed?'새 설정을 받았어요.':'이미 최신 설정이에요.'};
     }catch(e){return {ok:false,msg:e.kind==='net'?'네트워크 오류로 설정을 못 받았어요.':'설정을 받을 수 없어요. (규칙 게시 확인)'}}
@@ -712,6 +787,8 @@ function viewReset(){
 function route(){
   const q=new URLSearchParams(location.search);
   [...P.keys()].forEach(k=>P.delete(k));q.forEach((v,k)=>P.append(k,v));
+  if(!P.has('admin'))DRAFT=null;
+  applySite();
   clearInterval(S.bt);S.keyOff&&S.keyOff();clearTimeout(S.auto);
   if(P.has('admin'))viewAdmin();
   else if(P.has('board'))viewBoard();
