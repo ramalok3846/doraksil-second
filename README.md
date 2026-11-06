@@ -20,8 +20,16 @@
 | 설치 실패 없는 프리캐시 + 진단 | 파일별 3회 재시도, `__report.json`, `?repair` |
 
 ## 주소 (파라미터)
-`?admin` `?admin=books|rec|fields|site|set|cloud|upd|url` · `?board` · `?guide` · `?update=app|settings` · `?repair` · `?reset[=1,3|all]`
-폴더형: `/admin/ /books/ /records/ /fields/ /site/ /theme/ /settings/ /cloud/ /board/ /guide/ /repair/ /reset/ /update-app/ /update-settings/`
+`?admin` `?admin=books|play|live|rec|fields|site|set|cloud|upd|url` · `?board` · `?guide` · `?update=app|settings` · `?repair` · `?reset[=1,3|all]`
+폴더형: `/admin/ /books/ /play/ /live/ /records/ /fields/ /site/ /theme/ /settings/ /cloud/ /board/ /guide/ /repair/ /reset/ /update-app/ /update-settings/`
+
+## 출제·재도전·원격 (v2)
+- **출제 도서 선택**: 책마다 `출제` 체크 → 체크한 책만 게임에 나와요.
+- **방식** (관리자 → 🎮): 모두 차례로(기본) · 학생이 N권 선택(예: 두 권 중 한 권) · 무작위 배정 · 진행자 원격 지정.
+- **재도전**: 책마다 횟수(0~9) + 채택 기록(가장 가까운 / 마지막). 원격 라이브에서 1회씩 더 줄 수 있어요.
+- **경고**: 참가자 정보 ‘다음’ 시 변경 불가 확인 창, 스톱워치 START 시 되돌릴 수 없다는 확인 창(관리자에서 끄고 켬).
+- **원격 라이브**(🖥): 기기가 2초마다 화면 상태(`dr/live/{기기}`)를 올리고 관리자가 명령(`dr/cmd/{기기}`: 책 지정·재도전+1·잠금·메시지·처음으로·앱 업데이트)을 내려요. 영상 공유가 아니라 **상태 미러링**이에요. 기기 코드는 각 기기 하단에 표시.
+- 순위 기준은 **책당 평균 차이**(권수가 달라도 공정). **규칙에 live·cmd 가 추가됐으니 Firebase 규칙을 다시 게시**하세요.
 
 ## 처음 한 번 설정
 1. **Firebase 규칙**: 콘솔 → Realtime Database → 규칙에 `database.rules.json` 의 `dr` 블록 추가 후 게시 (홈페이지 리포 `database.rules.all.json` 에는 이미 합쳐 둠). 규칙 없이도 앱은 기기 안에서 동작.
